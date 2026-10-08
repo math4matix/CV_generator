@@ -8,16 +8,16 @@
 </head>
 
 <body>
-    <form id="pdf-url-form">
+    <div>
         <label for="pdf-url">PDF URL</label>
         <input id="pdf-url" type="url" required>
-        <button id="load-pdf-url" type="submit">Load PDF URL</button>
-    </form>
-    <form id="pdf-file-form">
+        <button id="load-pdf-url" type="button">Load PDF URL</button>
+    </div>
+    <div>
         <label for="pdf-file">Or choose a local PDF</label>
         <input id="pdf-file" type="file" accept="application/pdf,.pdf" required>
-        <button id="load-pdf-file" type="submit">Load PDF file</button>
-    </form>
+        <button id="load-pdf-file" type="button">Load PDF file</button>
+    </div>
     <p id="pdf-status" role="status" aria-live="polite"></p>
 
     <div id="controls">
@@ -30,7 +30,7 @@
 
     <!-- Include PDF.js from CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-    <script src="app.js"></script>
+    <script src="app.js?v=viewer-fix-1"></script>
 </body>
 
 </html>

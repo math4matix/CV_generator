@@ -1,8 +1,5 @@
 const defaultUrl = 'https://fgpw.pl/wp-content/uploads/2026/02/Szablon-CV-Remote-Ready-Wzor-Niezbednik-Kandydata-4.0.pdf';
 
-pdfjsLib.GlobalWorkerOptions.workerSrc =
-  'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-
 let pdfDoc = null,
     pageNum = 1,
     pageIsRendering = false,
@@ -11,9 +8,7 @@ let pdfDoc = null,
 const scale = 1.5,
       canvas = document.getElementById('pdf-render'),
       ctx = canvas.getContext('2d');
-const urlForm = document.getElementById('pdf-url-form');
 const urlInput = document.getElementById('pdf-url');
-const fileForm = document.getElementById('pdf-file-form');
 const fileInput = document.getElementById('pdf-file');
 const loadUrlButton = document.getElementById('load-pdf-url');
 const loadFileButton = document.getElementById('load-pdf-file');
@@ -22,6 +17,15 @@ const pageNumber = document.getElementById('page-num');
 const pageCount = document.getElementById('page-count');
 const previousButton = document.getElementById('prev-page');
 const nextButton = document.getElementById('next-page');
+
+if (typeof pdfjsLib === 'undefined') {
+  status.textContent = 'The PDF viewer library could not be loaded. Check your internet connection and reload the page.';
+  loadUrlButton.disabled = true;
+  loadFileButton.disabled = true;
+} else {
+  pdfjsLib.GlobalWorkerOptions.workerSrc =
+    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+}
 
 urlInput.value = defaultUrl;
 
@@ -117,19 +121,22 @@ const loadPdf = async (source, loadButton) => {
   }
 };
 
-urlForm.addEventListener('submit', async (event) => {
-  event.preventDefault();
+const loadUrl = async () => {
+  if (typeof pdfjsLib === 'undefined') return;
   const url = urlInput.value.trim();
-  if (!url) return;
+  if (!urlInput.reportValidity()) return;
 
   loadUrlButton.disabled = true;
   await loadPdf(url, loadUrlButton);
-});
+};
 
-fileForm.addEventListener('submit', async (event) => {
-  event.preventDefault();
+const loadFile = async () => {
+  if (typeof pdfjsLib === 'undefined') return;
   const file = fileInput.files[0];
-  if (!file) return;
+  if (!file) {
+    fileInput.reportValidity();
+    return;
+  }
 
   loadFileButton.disabled = true;
   try {
@@ -140,6 +147,17 @@ fileForm.addEventListener('submit', async (event) => {
     status.textContent = `Could not read this PDF file: ${error.message}`;
     loadFileButton.disabled = false;
   }
-});
+};
 
-urlForm.requestSubmit();
+loadUrlButton.addEventListener('click', loadUrl);
+urlInput.addEventListener('keydown', (event) => {
+  if (event.key === 'Enter') {
+    event.preventDefault();
+    loadUrl();
+  }
+});
+loadFileButton.addEventListener('click', loadFile);
+
+if (typeof pdfjsLib !== 'undefined') {
+  loadPdf(defaultUrl, loadUrlButton);
+}
