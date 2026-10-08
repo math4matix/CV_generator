@@ -19,7 +19,7 @@ const previousButton = document.getElementById('prev-page');
 const nextButton = document.getElementById('next-page');
 
 if (typeof pdfjsLib === 'undefined') {
-  status.textContent = 'The PDF viewer library could not be loaded. Check your internet connection and reload the page.';
+  status.textContent = 'Biblioteka do podglądu PDF nie mogła zostać załadowana. Sprawdź połączenie z internetem i odśwież stronę.';
   loadUrlButton.disabled = true;
   loadFileButton.disabled = true;
 } else {
@@ -58,7 +58,7 @@ const renderPage = async (num) => {
   } catch (error) {
     if (currentPdf === pdfDoc) {
       console.error('Error rendering PDF page:', error);
-      status.textContent = `Could not display page ${num}: ${error.message}`;
+      status.textContent = `Nie można wyświetlić strony ${num}: ${error.message}`;
     }
   } finally {
     if (currentPdf === pdfDoc) {
@@ -105,17 +105,17 @@ const loadPdf = async (source, loadButton) => {
   canvas.width = 0;
   canvas.height = 0;
   updateNavigation();
-  status.textContent = 'Loading PDF...';
+  status.textContent = 'Ładowanie pliku PDF...';
 
   try {
     pdfDoc = await pdfjsLib.getDocument(source).promise;
     pageCount.textContent = pdfDoc.numPages;
-    status.textContent = `Loaded PDF (${pdfDoc.numPages} pages).`;
+    status.textContent = `Załadowano plik PDF (${pdfDoc.numPages} stron).`;
     updateNavigation();
     await renderPage(pageNum);
   } catch (error) {
     console.error('Error loading PDF:', error);
-    status.textContent = `Could not load this PDF: ${error.message}. Check that the URL points directly to a PDF and that its server allows cross-origin access (CORS).`;
+    status.textContent = `Nie można wczytać tego pliku PDF: ${error.message}. Sprawdź, czy adres URL wskazuje bezpośrednio na plik PDF i czy serwer umożliwia dostęp cross-origin (CORS).`;
   } finally {
     loadButton.disabled = false;
   }
@@ -144,7 +144,7 @@ const loadFile = async () => {
     await loadPdf({ data }, loadFileButton);
   } catch (error) {
     console.error('Error reading PDF file:', error);
-    status.textContent = `Could not read this PDF file: ${error.message}`;
+    status.textContent = `Nie można odczytać tego pliku PDF: ${error.message}`;
     loadFileButton.disabled = false;
   }
 };

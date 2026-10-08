@@ -158,24 +158,24 @@
     <div class="page">
         <div class="load-section">
             <div>
-                <label for="pdf-url">PDF URL</label>
+                <label for="pdf-url">Adres URL pliku PDF</label>
                 <input id="pdf-url" type="url" required>
             </div>
-            <button id="load-pdf-url" type="button">Load PDF URL</button>
+            <button id="load-pdf-url" type="button">Wczytaj PDF z adresu</button>
         </div>
         <div class="load-section">
             <div>
-                <label for="pdf-file">Or choose a local PDF</label>
+                <label for="pdf-file">Lub wybierz plik PDF z komputera</label>
                 <input id="pdf-file" type="file" accept="application/pdf,.pdf" required>
             </div>
-            <button id="load-pdf-file" type="button">Load PDF file</button>
+            <button id="load-pdf-file" type="button">Wczytaj plik PDF</button>
         </div>
         <p id="pdf-status" role="status" aria-live="polite"></p>
 
         <div id="controls">
-            <button id="prev-page" disabled>Previous</button>
-            <span>Page <span id="page-num">1</span> of <span id="page-count">-</span></span>
-            <button id="next-page" disabled>Next</button>
+            <button id="prev-page" disabled>Poprzednia</button>
+            <span>Strona <span id="page-num">1</span> z <span id="page-count">-</span></span>
+            <button id="next-page" disabled>Następna</button>
         </div>
 
         <canvas id="pdf-render"></canvas>

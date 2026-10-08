@@ -82,9 +82,9 @@ Opis doświadczenia oparty na metodzie problemowo-zadaniowej (**Problem → Rozw
    python -m http.server 8000
    ```
 
-3. Open browser and visit: `http://localhost:8000`
+3. Otwórz przeglądarkę i przejdź pod adres: `http://localhost:8000`
 
-Paste a direct PDF URL into the **PDF URL** field and select **Load PDF URL** to view another document. Remote PDF hosts must allow cross-origin requests (CORS); alternatively, select a local file with **Or choose a local PDF**.
+Wklej bezpośredni adres URL pliku PDF w polu **Adres URL pliku PDF** i wybierz **Wczytaj PDF z adresu**, aby wyświetlić inny dokument. Zdalne serwery PDF muszą zezwalać na żądania cross-origin (CORS); alternatywnie wybierz lokalny plik za pomocą opcji **Lub wybierz plik PDF z komputera**.
 
 ---
 
