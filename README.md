@@ -4,7 +4,7 @@ Aplikacja internetowa umożliwiająca dynamiczne generowanie, zarządzanie oraz 
 
 ---
 
-## 🚀 Główne Funkcje
+##  Główne Funkcje
 
 * **Dynamiczna generacja PDF:** Tworzenie i dostosowywanie dokumentów PDF przy użyciu list wybieranych (drop-down).
 * **Obsługa języka angielskiego:** Możliwość automatycznego lub ręcznego tłumaczenia sekcji CV na język angielski.
@@ -14,7 +14,7 @@ Aplikacja internetowa umożliwiająca dynamiczne generowanie, zarządzanie oraz 
 
 ---
 
-## 🛠️ Stack Techniczny
+##  Stack Techniczny
 
 * **Frontend:** Vanilla JavaScript (Plain JS), HTML5
 * **Style:** CSS (Bootstrap 5)
@@ -24,7 +24,7 @@ Aplikacja internetowa umożliwiająca dynamiczne generowanie, zarządzanie oraz 
 
 ---
 
-## 📊 Struktura Danych CV
+##  Struktura Danych CV
 
 Aplikacja zbiera i przetwarza dane podzielone na następujące sekcje:
 
@@ -66,7 +66,7 @@ Opis doświadczenia oparty na metodzie problemowo-zadaniowej (**Problem → Rozw
 
 ---
 
-## ⚙️ Instalacja i Uruchomienie
+##  Instalacja i Uruchomienie
 
 1. **Klonowanie repozytorium:**
    ```bash
@@ -83,9 +83,3 @@ Opis doświadczenia oparty na metodzie problemowo-zadaniowej (**Problem → Rozw
    ```
 
 3. Open browser and visit: `http://localhost:8000`
-
----
-
-## 📝 Licencja
-
-Projekt udostępniany jest na licencji MIT. Patrz plik `LICENSE`, aby uzyskać więcej szczegółów.
