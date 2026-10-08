@@ -1,4 +1,4 @@
-const defaultUrl = 'https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf';
+const defaultUrl = 'https://fgpw.pl/wp-content/uploads/2026/02/Szablon-CV-Remote-Ready-Wzor-Niezbednik-Kandydata-4.0.pdf';
 
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
