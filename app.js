@@ -1,4 +1,4 @@
-const defaultUrl = 'https://fgpw.pl/wp-content/uploads/2026/02/Szablon-CV-Remote-Ready-Wzor-Niezbednik-Kandydata-4.0.pdf';
+const defaultUrl = 'https://www.aplikuj.pl/cv/wp-content/uploads/2019/05/wzor-cv-dla-studenta.pdf';
 
 let pdfDoc = null,
     pageNum = 1,
