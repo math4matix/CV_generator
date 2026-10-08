@@ -5,28 +5,181 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generator CV</title>
+    <style>
+        :root {
+            --bg: #edf7ff;
+            --panel: #f8fbff;
+            --panel-strong: #e4f1ff;
+            --primary: #7bb8ff;
+            --primary-dark: #4a8fe8;
+            --primary-soft: #dfeeff;
+            --text: #1d3557;
+            --muted: #5e7a9d;
+            --border: #cfe1ff;
+            --shadow: rgba(101, 153, 214, 0.15);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #edf7ff 0%, #dfeeff 100%);
+            color: var(--text);
+            font-family: Arial, Helvetica, sans-serif;
+            padding: 32px 20px;
+        }
+
+        .page {
+            width: min(100%, 900px);
+            background: rgba(255, 255, 255, 0.72);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 32px;
+            box-shadow: 0 18px 40px var(--shadow);
+            backdrop-filter: blur(8px);
+        }
+
+        .load-section {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 12px 16px;
+            align-items: end;
+            margin-bottom: 22px;
+            padding: 18px 20px;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+        }
+
+        .load-section label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        .load-section input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: #ffffff;
+            color: var(--text);
+            font-size: 0.98rem;
+        }
+
+        .load-section input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(123, 184, 255, 0.18);
+        }
+
+        button {
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: #fff;
+            font-weight: 600;
+            padding: 12px 18px;
+            cursor: pointer;
+            transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.2s ease;
+            box-shadow: 0 8px 18px rgba(74, 143, 232, 0.2);
+        }
+
+        button:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 12px 22px rgba(74, 143, 232, 0.28);
+        }
+
+        button:disabled {
+            background: #bdd8f8;
+            color: #edf4ff;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        #pdf-status {
+            min-height: 24px;
+            margin: 0 4px 18px;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        #controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+            margin: 20px 0 28px;
+            padding: 16px 20px;
+            background: var(--panel-strong);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        #controls span {
+            color: var(--muted);
+        }
+
+        #pdf-render {
+            display: block;
+            width: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            background: #ffffff;
+            box-shadow: 0 12px 28px rgba(103, 150, 221, 0.12);
+        }
+
+        @media (max-width: 640px) {
+            .page {
+                padding: 20px 16px;
+            }
+
+            .load-section {
+                grid-template-columns: 1fr;
+            }
+
+            #controls {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <div>
-        <label for="pdf-url">PDF URL</label>
-        <input id="pdf-url" type="url" required>
-        <button id="load-pdf-url" type="button">Load PDF URL</button>
-    </div>
-    <div>
-        <label for="pdf-file">Or choose a local PDF</label>
-        <input id="pdf-file" type="file" accept="application/pdf,.pdf" required>
-        <button id="load-pdf-file" type="button">Load PDF file</button>
-    </div>
-    <p id="pdf-status" role="status" aria-live="polite"></p>
+    <div class="page">
+        <div class="load-section">
+            <div>
+                <label for="pdf-url">PDF URL</label>
+                <input id="pdf-url" type="url" required>
+            </div>
+            <button id="load-pdf-url" type="button">Load PDF URL</button>
+        </div>
+        <div class="load-section">
+            <div>
+                <label for="pdf-file">Or choose a local PDF</label>
+                <input id="pdf-file" type="file" accept="application/pdf,.pdf" required>
+            </div>
+            <button id="load-pdf-file" type="button">Load PDF file</button>
+        </div>
+        <p id="pdf-status" role="status" aria-live="polite"></p>
 
-    <div id="controls">
-        <button id="prev-page" disabled>Previous</button>
-        <span>Page <span id="page-num">1</span> of <span id="page-count">-</span></span>
-        <button id="next-page" disabled>Next</button>
-    </div>
+        <div id="controls">
+            <button id="prev-page" disabled>Previous</button>
+            <span>Page <span id="page-num">1</span> of <span id="page-count">-</span></span>
+            <button id="next-page" disabled>Next</button>
+        </div>
 
-    <canvas id="pdf-render"></canvas>
+        <canvas id="pdf-render"></canvas>
+    </div>
 
     <!-- Include PDF.js from CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
