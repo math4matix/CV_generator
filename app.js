@@ -13,7 +13,10 @@ const scale = 1.5,
       ctx = canvas.getContext('2d');
 const urlForm = document.getElementById('pdf-url-form');
 const urlInput = document.getElementById('pdf-url');
-const loadButton = document.getElementById('load-pdf');
+const fileForm = document.getElementById('pdf-file-form');
+const fileInput = document.getElementById('pdf-file');
+const loadUrlButton = document.getElementById('load-pdf-url');
+const loadFileButton = document.getElementById('load-pdf-file');
 const status = document.getElementById('pdf-status');
 const pageNumber = document.getElementById('page-num');
 const pageCount = document.getElementById('page-count');
@@ -88,12 +91,7 @@ nextButton.addEventListener('click', () => {
   queueRenderPage(pageNum);
 });
 
-urlForm.addEventListener('submit', async (event) => {
-  event.preventDefault();
-  const url = urlInput.value.trim();
-  if (!url) return;
-
-  loadButton.disabled = true;
+const loadPdf = async (source, loadButton) => {
   pdfDoc = null;
   pageIsRendering = false;
   pageNumIsPending = null;
@@ -106,7 +104,7 @@ urlForm.addEventListener('submit', async (event) => {
   status.textContent = 'Loading PDF...';
 
   try {
-    pdfDoc = await pdfjsLib.getDocument(url).promise;
+    pdfDoc = await pdfjsLib.getDocument(source).promise;
     pageCount.textContent = pdfDoc.numPages;
     status.textContent = `Loaded PDF (${pdfDoc.numPages} pages).`;
     updateNavigation();
@@ -116,6 +114,31 @@ urlForm.addEventListener('submit', async (event) => {
     status.textContent = `Could not load this PDF: ${error.message}. Check that the URL points directly to a PDF and that its server allows cross-origin access (CORS).`;
   } finally {
     loadButton.disabled = false;
+  }
+};
+
+urlForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const url = urlInput.value.trim();
+  if (!url) return;
+
+  loadUrlButton.disabled = true;
+  await loadPdf(url, loadUrlButton);
+});
+
+fileForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const file = fileInput.files[0];
+  if (!file) return;
+
+  loadFileButton.disabled = true;
+  try {
+    const data = new Uint8Array(await file.arrayBuffer());
+    await loadPdf({ data }, loadFileButton);
+  } catch (error) {
+    console.error('Error reading PDF file:', error);
+    status.textContent = `Could not read this PDF file: ${error.message}`;
+    loadFileButton.disabled = false;
   }
 });
 

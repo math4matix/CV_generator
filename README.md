@@ -84,7 +84,7 @@ Opis doświadczenia oparty na metodzie problemowo-zadaniowej (**Problem → Rozw
 
 3. Open browser and visit: `http://localhost:8000`
 
-Paste a direct PDF URL into the **PDF URL** field and select **Load PDF** to view another document. For remote PDFs, the host must allow cross-origin requests (CORS).
+Paste a direct PDF URL into the **PDF URL** field and select **Load PDF URL** to view another document. Remote PDF hosts must allow cross-origin requests (CORS); alternatively, select a local file with **Or choose a local PDF**.
 
 ---
 

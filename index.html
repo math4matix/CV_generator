@@ -11,7 +11,12 @@
     <form id="pdf-url-form">
         <label for="pdf-url">PDF URL</label>
         <input id="pdf-url" type="url" required>
-        <button id="load-pdf" type="submit">Load PDF</button>
+        <button id="load-pdf-url" type="submit">Load PDF URL</button>
+    </form>
+    <form id="pdf-file-form">
+        <label for="pdf-file">Or choose a local PDF</label>
+        <input id="pdf-file" type="file" accept="application/pdf,.pdf" required>
+        <button id="load-pdf-file" type="submit">Load PDF file</button>
     </form>
     <p id="pdf-status" role="status" aria-live="polite"></p>
 
