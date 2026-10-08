@@ -1,5 +1,5 @@
 // URL of the PDF document (Replace with your local or external PDF path)
-const url = 'https://www.aplikuj.pl/cv/wp-content/uploads/2019/05/wzor-cv-dla-studenta.pdf';
+const url = 'https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf';
 
 // 1. Specify the PDF.js worker path
 pdfjsLib.GlobalWorkerOptions.workerSrc = 
