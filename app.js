@@ -1,4 +1,4 @@
-const defaultUrl = 'https://www.sbs.ox.ac.uk/sites/default/files/2019-01/cv-template.pdf';
+const defaultUrl = 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf';
 
 let pdfDoc = null,
     pageNum = 1,
