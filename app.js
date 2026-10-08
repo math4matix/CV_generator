@@ -1,8 +1,6 @@
-// URL of the PDF document (Replace with your local or external PDF path)
-const url = 'https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf';
+const defaultUrl = 'https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf';
 
-// 1. Specify the PDF.js worker path
-pdfjsLib.GlobalWorkerOptions.workerSrc = 
+pdfjsLib.GlobalWorkerOptions.workerSrc =
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
 let pdfDoc = null,
@@ -10,40 +8,63 @@ let pdfDoc = null,
     pageIsRendering = false,
     pageNumIsPending = null;
 
-const scale = 1.5, // Canvas zoom scale
+const scale = 1.5,
       canvas = document.getElementById('pdf-render'),
       ctx = canvas.getContext('2d');
+const urlForm = document.getElementById('pdf-url-form');
+const urlInput = document.getElementById('pdf-url');
+const loadButton = document.getElementById('load-pdf');
+const status = document.getElementById('pdf-status');
+const pageNumber = document.getElementById('page-num');
+const pageCount = document.getElementById('page-count');
+const previousButton = document.getElementById('prev-page');
+const nextButton = document.getElementById('next-page');
 
-// 2. Render specified page
-const renderPage = (num) => {
+urlInput.value = defaultUrl;
+
+const updateNavigation = () => {
+  previousButton.disabled = !pdfDoc || pageNum <= 1;
+  nextButton.disabled = !pdfDoc || pageNum >= pdfDoc.numPages;
+};
+
+const renderPage = async (num) => {
+  if (!pdfDoc) return;
+  const currentPdf = pdfDoc;
   pageIsRendering = true;
 
-  pdfDoc.getPage(num).then((page) => {
-    // Set scale/viewport
+  try {
+    const page = await currentPdf.getPage(num);
+    if (currentPdf !== pdfDoc) return;
+
     const viewport = page.getViewport({ scale });
     canvas.height = viewport.height;
     canvas.width = viewport.width;
 
-    const renderCtx = {
+    await page.render({
       canvasContext: ctx,
       viewport: viewport
-    };
+    }).promise;
 
-    page.render(renderCtx).promise.then(() => {
+    if (currentPdf === pdfDoc) {
+      pageNumber.textContent = num;
+    }
+  } catch (error) {
+    if (currentPdf === pdfDoc) {
+      console.error('Error rendering PDF page:', error);
+      status.textContent = `Could not display page ${num}: ${error.message}`;
+    }
+  } finally {
+    if (currentPdf === pdfDoc) {
       pageIsRendering = false;
-
       if (pageNumIsPending !== null) {
-        renderPage(pageNumIsPending);
+        const pendingPage = pageNumIsPending;
         pageNumIsPending = null;
+        renderPage(pendingPage);
       }
-    });
-
-    // Update current page indicator
-    document.getElementById('page-num').textContent = num;
-  });
+    }
+  }
 };
 
-// Queue page rendering if another page is currently rendering
 const queueRenderPage = (num) => {
   if (pageIsRendering) {
     pageNumIsPending = num;
@@ -52,26 +73,50 @@ const queueRenderPage = (num) => {
   }
 };
 
-// Show previous page
-document.getElementById('prev-page').addEventListener('click', () => {
-  if (pageNum <= 1) return;
+previousButton.addEventListener('click', () => {
+  if (!pdfDoc || pageNum <= 1) return;
   pageNum--;
+  updateNavigation();
   queueRenderPage(pageNum);
 });
 
-// Show next page
-document.getElementById('next-page').addEventListener('click', () => {
+nextButton.addEventListener('click', () => {
+  if (!pdfDoc) return;
   if (pageNum >= pdfDoc.numPages) return;
   pageNum++;
+  updateNavigation();
   queueRenderPage(pageNum);
 });
 
-// 3. Load PDF Document
-pdfjsLib.getDocument(url).promise.then((pdf) => {
-  pdfDoc = pdf;
-  document.getElementById('page-count').textContent = pdfDoc.numPages;
+urlForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const url = urlInput.value.trim();
+  if (!url) return;
 
-  renderPage(pageNum);
-}).catch((err) => {
-  console.error('Error loading PDF:', err);
+  loadButton.disabled = true;
+  pdfDoc = null;
+  pageIsRendering = false;
+  pageNumIsPending = null;
+  pageNum = 1;
+  pageNumber.textContent = '1';
+  pageCount.textContent = '-';
+  canvas.width = 0;
+  canvas.height = 0;
+  updateNavigation();
+  status.textContent = 'Loading PDF...';
+
+  try {
+    pdfDoc = await pdfjsLib.getDocument(url).promise;
+    pageCount.textContent = pdfDoc.numPages;
+    status.textContent = `Loaded PDF (${pdfDoc.numPages} pages).`;
+    updateNavigation();
+    await renderPage(pageNum);
+  } catch (error) {
+    console.error('Error loading PDF:', error);
+    status.textContent = `Could not load this PDF: ${error.message}. Check that the URL points directly to a PDF and that its server allows cross-origin access (CORS).`;
+  } finally {
+    loadButton.disabled = false;
+  }
 });
+
+urlForm.requestSubmit();

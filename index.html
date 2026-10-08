@@ -8,10 +8,17 @@
 </head>
 
 <body>
+    <form id="pdf-url-form">
+        <label for="pdf-url">PDF URL</label>
+        <input id="pdf-url" type="url" required>
+        <button id="load-pdf" type="submit">Load PDF</button>
+    </form>
+    <p id="pdf-status" role="status" aria-live="polite"></p>
+
     <div id="controls">
-        <button id="prev-page">Previous</button>
+        <button id="prev-page" disabled>Previous</button>
         <span>Page <span id="page-num">1</span> of <span id="page-count">-</span></span>
-        <button id="next-page">Next</button>
+        <button id="next-page" disabled>Next</button>
     </div>
 
     <canvas id="pdf-render"></canvas>
