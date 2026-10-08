@@ -1,4 +1,4 @@
-const defaultUrl = 'https://www.aplikuj.pl/cv/wp-content/uploads/2019/05/wzor-cv-dla-studenta.pdf';
+const defaultUrl = 'https://www.sbs.ox.ac.uk/sites/default/files/2019-01/cv-template.pdf';
 
 let pdfDoc = null,
     pageNum = 1,
