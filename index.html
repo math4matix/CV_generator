@@ -2,10 +2,292 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Generator CV</title>
+    <style>
+        body {
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 24px;
+            background: #f5f4ef;
+            color: #292d29;
+            font-family: Arial, sans-serif;
+            line-height: 1.5;
+        }
+
+        header,
+        section {
+            margin-bottom: 18px;
+            padding: 20px;
+            background: white;
+            border: 1px solid #deded7;
+        }
+
+        header {
+            border-top: 4px solid #416652;
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-family: Georgia, serif;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 32px;
+        }
+
+        h2 {
+            margin-top: 0;
+            font-size: 22px;
+        }
+
+        nav {
+            margin: 20px 0;
+        }
+
+        nav a {
+            margin-right: 12px;
+            color: #31543e;
+        }
+
+        .fields {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        label {
+            display: block;
+        }
+
+        input,
+        textarea {
+            box-sizing: border-box;
+            width: 100%;
+            margin-top: 4px;
+            padding: 8px;
+            border: 1px solid #aaa;
+            border-radius: 3px;
+            font: inherit;
+        }
+
+        textarea {
+            min-height: 80px;
+            resize: none;
+        }
+
+        .wide {
+            grid-column: 1 / -1;
+        }
+
+        .entry {
+            margin: 12px 0;
+            padding: 12px;
+            border: 1px solid #deded7;
+        }
+
+        button,
+        .submit-button {
+            display: inline-block;
+            margin: 12px 8px 0 0;
+            padding: 9px 14px;
+            border: 1px solid #31543e;
+            border-radius: 3px;
+            background: white;
+            color: #31543e;
+            font: inherit;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        button:hover,
+        .submit-button:hover {
+            background: #edf1eb;
+        }
+
+        .submit-button {
+            background: #31543e;
+            color: white;
+        }
+
+        .submit-row {
+            text-align: center;
+        }
+
+        .submit-button:hover {
+            background: #243f2e;
+            color: white;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 12px;
+            }
+
+            .fields {
+                grid-template-columns: 1fr;
+            }
+
+            .wide {
+                grid-column: auto;
+            }
+        }
+    </style>
 </head>
 <body>
-    
+    <header>
+        <h1>Moje CV</h1>
+        <p>Uzupełnij formularz swoimi danymi.</p>
+    </header>
+
+    <nav aria-label="Sekcje formularza">
+        <a href="#personal">Dane osobowe</a>
+        <a href="#education">Edukacja</a>
+        <a href="#experience">Doświadczenie</a>
+        <a href="#skills">Umiejętności</a>
+        <a href="#languages">Języki</a>
+        <a href="#certificates">Certyfikaty</a>
+        <a href="#interests">Zainteresowania</a>
+    </nav>
+
+    <main>
+        <section id="personal">
+            <h2>Dane osobowe</h2>
+            <div class="fields">
+                <label>Imię i nazwisko<input name="fullName" autocomplete="name"></label>
+                <label>Adres e-mail<input name="email" type="email" autocomplete="email"></label>
+                <label>Numer telefonu<input name="phone" type="tel" autocomplete="tel"></label>
+                <label>Miasto<input name="address" autocomplete="address-level2"></label>
+                <label>LinkedIn<input name="linkedin" type="url"></label>
+                <label>GitHub<input name="github" type="url"></label>
+                <label>Portfolio<input name="portfolio" type="url"></label>
+                <label>Zdjęcie<input name="photo" type="file" accept="image/*"></label>
+            </div>
+        </section>
+
+        <section id="education">
+            <h2>Edukacja</h2>
+            <div class="entry-list" data-name="Placówka"></div>
+            <button type="button" data-add="education">Dodaj placówkę</button>
+        </section>
+
+        <section id="experience">
+            <h2>Doświadczenie zawodowe</h2>
+            <div class="entry-list" data-name="Doświadczenie"></div>
+            <button type="button" data-add="experience">Dodaj doświadczenie</button>
+        </section>
+
+        <section id="skills">
+            <h2>Umiejętności</h2>
+            <label>Umiejętności<textarea name="skills"></textarea></label>
+        </section>
+
+        <section id="languages">
+            <h2>Języki obce</h2>
+            <div class="entry-list" data-name="Język"></div>
+            <button type="button" data-add="languages">Dodaj język</button>
+        </section>
+
+        <section id="certificates">
+            <h2>Certyfikaty i szkolenia</h2>
+            <div class="entry-list" data-name="Certyfikat"></div>
+            <button type="button" data-add="certificates">Dodaj certyfikat</button>
+        </section>
+
+        <section id="interests">
+            <h2>Zainteresowania</h2>
+            <label>Pasje i zainteresowania<textarea name="interests"></textarea></label>
+        </section>
+
+        <div class="submit-row">
+            <a class="submit-button" href="thankYou.html">Wyslij</a>
+        </div>
+    </main>
+
+    <template id="education-template">
+        <div class="entry" data-entry>
+            <h3 class="entry-title"></h3>
+            <div class="fields">
+                <label>Nazwa szkoły lub uczelni<input name="school"></label>
+                <label>Kierunek<input name="fieldOfStudy"></label>
+                <label>Miasto<input name="schoolAddress"></label>
+                <label>Data od<input name="educationFrom" type="month"></label>
+                <label>Data do<input name="educationTo" type="month"></label>
+            </div>
+            <button type="button" data-remove>Usuń</button>
+        </div>
+    </template>
+
+    <template id="experience-template">
+        <div class="entry" data-entry>
+            <h3 class="entry-title"></h3>
+            <div class="fields">
+                <label>Stanowisko<input name="jobTitle"></label>
+                <label>Firma<input name="company"></label>
+                <label>Data od<input name="experienceFrom" type="month"></label>
+                <label>Data do<input name="experienceTo" type="month"></label>
+                <label class="wide">Opis pracy i osiągnięć<textarea name="result"></textarea></label>
+            </div>
+            <button type="button" data-remove>Usuń</button>
+        </div>
+    </template>
+
+    <template id="languages-template">
+        <div class="entry" data-entry>
+            <h3 class="entry-title"></h3>
+            <div class="fields">
+                <label>Język<input name="language"></label>
+                <label>Poziom<input name="languageLevel"></label>
+            </div>
+            <button type="button" data-remove>Usuń</button>
+        </div>
+    </template>
+
+    <template id="certificates-template">
+        <div class="entry" data-entry>
+            <h3 class="entry-title"></h3>
+            <div class="fields">
+                <label>Nazwa certyfikatu lub szkolenia<input name="certificateName"></label>
+                <label>Link<input name="certificateUrl" type="url"></label>
+                <label class="wide">Dokument<input name="certificateFile" type="file" accept="image/*,.pdf"></label>
+            </div>
+            <button type="button" data-remove>Usuń</button>
+        </div>
+    </template>
+
+    <script>
+        document.querySelectorAll("[data-add]").forEach(function (button) {
+            button.addEventListener("click", function () {
+                const section = button.closest("section");
+                const list = section.querySelector(".entry-list");
+                const template = document.querySelector("#" + button.dataset.add + "-template");
+                const entry = template.content.firstElementChild.cloneNode(true);
+
+                list.appendChild(entry);
+                updateTitles(list);
+            });
+
+            button.click();
+        });
+
+        document.addEventListener("click", function (event) {
+            if (event.target.hasAttribute("data-remove")) {
+                const list = event.target.closest("section").querySelector(".entry-list");
+                event.target.closest(".entry").remove();
+                updateTitles(list);
+            }
+        });
+
+        function updateTitles(list) {
+            const entries = list.querySelectorAll(".entry");
+
+            entries.forEach(function (entry, index) {
+                entry.querySelector(".entry-title").textContent =
+                    list.dataset.name + " " + (index + 1);
+            });
+        }
+    </script>
 </body>
 </html>
