@@ -14,8 +14,10 @@ Aplikacja internetowa umożliwiająca dynamiczne generowanie, zarządzanie oraz 
 
 ### Funkcje dostępne w prototypie
 
-* Wybór jednego z trzech przykładowych szablonów CV i podgląd na stronie.
+* Edytor CV na stronie głównej z formularzem po lewej i wyborem szablonów oraz podglądem po prawej.
+* Wybór jednego z trzech przykładowych szablonów CV; podgląd pierwszego szablonu ładuje się automatycznie.
 * Drukowanie wybranego szablonu lub zapis do PDF z poziomu okna drukowania przeglądarki.
+* Podglądy zawierają przykładowe dane i nie są jeszcze wypełniane danymi z formularza.
 
 ---
 
@@ -91,8 +93,8 @@ Opis doświadczenia oparty na metodzie problemowo-zadaniowej (**Problem → Rozw
 
 ## Struktura projektu
 
-* `index.html` — formularz danych CV.
-* `template_viewer.html` — wybór i podgląd przykładowych szablonów.
-* `app.js` — obsługa wyboru szablonu, podglądu, drukowania i zapisu.
+* `index.html` — główny edytor CV, formularz danych oraz wybór i podgląd szablonów.
+* `template_viewer.html` — samodzielny podgląd przykładowych szablonów.
+* `app.js` — obsługa wyboru szablonu, podglądu, drukowania i zapisu na stronie głównej oraz w samodzielnym podglądzie.
 * `templates/` — trzy gotowe szablony CV.
 * `assets/` — przykładowe zdjęcia używane przez szablony.

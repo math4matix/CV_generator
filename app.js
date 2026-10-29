@@ -63,3 +63,5 @@ const openPrintDialog = (saveAsPdf) => {
 
 printButton.addEventListener('click', () => openPrintDialog(false));
 saveButton.addEventListener('click', () => openPrintDialog(true));
+
+templateButtons[0]?.click();
