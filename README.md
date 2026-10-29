@@ -17,7 +17,8 @@ Aplikacja internetowa umożliwiająca dynamiczne generowanie, zarządzanie oraz 
 * Edytor CV na stronie głównej z formularzem po lewej i wyborem szablonów oraz podglądem po prawej.
 * Wybór jednego z trzech przykładowych szablonów CV; podgląd pierwszego szablonu ładuje się automatycznie.
 * Drukowanie wybranego szablonu lub zapis do PDF z poziomu okna drukowania przeglądarki.
-* Podglądy zawierają przykładowe dane i nie są jeszcze wypełniane danymi z formularza.
+* Podgląd aktualizuje się w czasie rzeczywistym na podstawie danych z formularza, w tym sekcji dodawanych dynamicznie i zdjęcia.
+* Zawartość CV skaluje się tak, aby mieściła się na jednej stronie A4, również podczas drukowania lub zapisu do PDF.
 
 ---
 
