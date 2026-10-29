@@ -344,13 +344,14 @@
         <section id="personal">
             <h2>Dane osobowe</h2>
             <div class="fields">
-                <label>Imię i nazwisko <span class="required-indicator" aria-hidden="true">*</span><input name="fullName" autocomplete="name" required></label>
-                <label>Adres e-mail <span class="required-indicator" aria-hidden="true">*</span><input name="email" type="email" autocomplete="email" required></label>
-                <label>Numer telefonu <span class="required-indicator" aria-hidden="true">*</span><input name="phone" type="tel" autocomplete="tel" required></label>
-                <label>Miasto<input name="address" autocomplete="address-level2"></label>
-                <label>LinkedIn<input name="linkedin" type="url"></label>
-                <label>GitHub<input name="github" type="url"></label>
-                <label>Portfolio<input name="portfolio" type="url"></label>
+                <label>Imię <span class="required-indicator" aria-hidden="true">*</span><input name="firstName" autocomplete="given-name" placeholder="np. Jan" required></label>
+                <label>Nazwisko <span class="required-indicator" aria-hidden="true">*</span><input name="lastName" autocomplete="family-name" placeholder="np. Kowalski" required></label>
+                <label>Adres e-mail <span class="required-indicator" aria-hidden="true">*</span><input name="email" type="email" autocomplete="email" placeholder="np. jan@example.com" required></label>
+                <label>Numer telefonu <span class="required-indicator" aria-hidden="true">*</span><input name="phone" type="tel" autocomplete="tel" placeholder="np. 123 456 789" required></label>
+                <label>Miasto<input name="address" autocomplete="address-level2" placeholder="np. Warszawa"></label>
+                <label>LinkedIn<input name="linkedin" type="url" placeholder="https://linkedin.com/in/..."></label>
+                <label>GitHub<input name="github" type="url" placeholder="https://github.com/..."></label>
+                <label>Portfolio<input name="portfolio" type="url" placeholder="https://twoja-strona.pl"></label>
                 <label>Zdjęcie<input name="photo" type="file" accept="image/*"></label>
             </div>
         </section>
@@ -369,7 +370,7 @@
 
         <section id="skills">
             <h2>Umiejętności</h2>
-            <label>Umiejętności<textarea name="skills"></textarea></label>
+            <label>Umiejętności<textarea name="skills" placeholder="np. Excel, komunikatywność, praca zespołowa"></textarea></label>
         </section>
 
         <section id="languages">
@@ -386,7 +387,7 @@
 
         <section id="interests">
             <h2>Zainteresowania</h2>
-            <label>Pasje i zainteresowania<textarea name="interests"></textarea></label>
+            <label>Pasje i zainteresowania<textarea name="interests" placeholder="np. fotografia, podróże"></textarea></label>
         </section>
 
         </form>
@@ -438,9 +439,9 @@
         <div class="entry" data-entry>
             <h3 class="entry-title"></h3>
             <div class="fields">
-                <label>Nazwa szkoły lub uczelni<input name="school"></label>
-                <label>Kierunek<input name="fieldOfStudy"></label>
-                <label>Miasto<input name="schoolAddress"></label>
+                <label>Nazwa szkoły lub uczelni<input name="school" placeholder="np. Uniwersytet Warszawski"></label>
+                <label>Kierunek<input name="fieldOfStudy" placeholder="np. Informatyka"></label>
+                <label>Miasto<input name="schoolAddress" placeholder="np. Warszawa"></label>
                 <label>Data od<input name="educationFrom" type="month"></label>
                 <label>Data do<input name="educationTo" type="month"></label>
             </div>
@@ -452,11 +453,11 @@
         <div class="entry" data-entry>
             <h3 class="entry-title"></h3>
             <div class="fields">
-                <label>Stanowisko<input name="jobTitle"></label>
-                <label>Firma<input name="company"></label>
+                <label>Stanowisko<input name="jobTitle" placeholder="np. Specjalista ds. sprzedaży"></label>
+                <label>Firma<input name="company" placeholder="np. Firma ABC"></label>
                 <label>Data od<input name="experienceFrom" type="month"></label>
                 <label>Data do<input name="experienceTo" type="month"></label>
-                <label class="wide">Opis pracy i osiągnięć<textarea name="result"></textarea></label>
+                <label class="wide">Opis pracy i osiągnięć<textarea name="result" placeholder="Opisz swoje obowiązki i osiągnięcia"></textarea></label>
             </div>
             <button type="button" data-remove>Usuń</button>
         </div>
@@ -466,8 +467,8 @@
         <div class="entry" data-entry>
             <h3 class="entry-title"></h3>
             <div class="fields">
-                <label>Język<input name="language"></label>
-                <label>Poziom<input name="languageLevel"></label>
+                <label>Język<input name="language" placeholder="np. angielski"></label>
+                <label>Poziom<input name="languageLevel" placeholder="np. B2"></label>
             </div>
             <button type="button" data-remove>Usuń</button>
         </div>
@@ -477,8 +478,8 @@
         <div class="entry" data-entry>
             <h3 class="entry-title"></h3>
             <div class="fields">
-                <label>Nazwa certyfikatu lub szkolenia<input name="certificateName"></label>
-                <label>Link<input name="certificateUrl" type="url"></label>
+                <label>Nazwa certyfikatu lub szkolenia<input name="certificateName" placeholder="np. Certyfikat językowy B2"></label>
+                <label>Link<input name="certificateUrl" type="url" placeholder="https://..."></label>
                 <label class="wide">Dokument<input name="certificateFile" type="file" accept="image/*,.pdf"></label>
             </div>
             <button type="button" data-remove>Usuń</button>
