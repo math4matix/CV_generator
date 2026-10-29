@@ -4,232 +4,307 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Wybierz szablon CV, zobacz podgląd i wydrukuj lub zapisz dokument jako PDF.">
     <title>Generator CV</title>
     <style>
         :root {
-            --bg: #edf7ff;
-            --panel: #f8fbff;
-            --panel-strong: #e4f1ff;
-            --primary: #7bb8ff;
-            --primary-dark: #4a8fe8;
-            --primary-soft: #dfeeff;
-            --text: #1d3557;
-            --muted: #5e7a9d;
-            --border: #cfe1ff;
-            --shadow: rgba(101, 153, 214, 0.15);
+            color-scheme: light;
+            --background: #f3f6fb;
+            --surface: #ffffff;
+            --surface-muted: #f7f9fc;
+            --primary: #3157a4;
+            --primary-dark: #24427f;
+            --text: #192338;
+            --muted: #64718a;
+            --border: #dce3ef;
+            --focus: #8db4ff;
         }
 
-        * { box-sizing: border-box; }
+        * {
+            box-sizing: border-box;
+        }
 
         body {
-            margin: 0;
+            min-width: 320px;
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, #edf7ff 0%, #dfeeff 100%);
+            margin: 0;
+            padding: 48px 24px;
+            background: var(--background);
             color: var(--text);
             font-family: Arial, Helvetica, sans-serif;
-            padding: 32px 20px;
-        }
-
-        .page {
-            width: min(100%, 900px);
-            background: rgba(255, 255, 255, 0.72);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 32px;
-            box-shadow: 0 18px 40px var(--shadow);
-            backdrop-filter: blur(8px);
-        }
-
-        .load-section {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 12px 16px;
-            align-items: end;
-            margin-bottom: 22px;
-            padding: 18px 20px;
-            background: var(--panel);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-        }
-
-        .load-section label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: var(--text);
-        }
-
-        .load-section input {
-            width: 100%;
-            padding: 12px 14px;
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            background: #ffffff;
-            color: var(--text);
-            font-size: 0.98rem;
-        }
-
-        .load-section input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(123, 184, 255, 0.18);
         }
 
         button {
-            border: none;
-            border-radius: 10px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: #fff;
-            font-weight: 600;
-            padding: 12px 18px;
-            cursor: pointer;
-            transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.2s ease;
-            box-shadow: 0 8px 18px rgba(74, 143, 232, 0.2);
+            font: inherit;
         }
 
-        button:hover:not(:disabled) {
-            transform: translateY(-1px);
-            box-shadow: 0 12px 22px rgba(74, 143, 232, 0.28);
+        .page {
+            width: min(100%, 1080px);
+            margin: 0 auto;
         }
 
-        button:disabled {
-            background: #bdd8f8;
-            color: #edf4ff;
-            cursor: not-allowed;
-            box-shadow: none;
+        .page-heading {
+            margin-bottom: 28px;
         }
 
-        #pdf-status {
-            min-height: 24px;
-            margin: 0 4px 18px;
+        .page-heading h1 {
+            margin: 0 0 8px;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            letter-spacing: -0.04em;
+        }
+
+        .page-heading p,
+        .preview-heading p {
+            margin: 0;
             color: var(--muted);
-            font-size: 0.95rem;
+            line-height: 1.55;
         }
 
-        #controls {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 18px;
-            margin: 20px 0 28px;
-            padding: 16px 20px;
-            background: var(--panel-strong);
+        .template-section,
+        .preview-section {
+            padding: 24px;
             border: 1px solid var(--border);
-            border-radius: 14px;
-            color: var(--text);
-            font-weight: 600;
+            border-radius: 16px;
+            background: var(--surface);
+            box-shadow: 0 12px 32px rgb(34 54 89 / 6%);
         }
 
-        #controls span {
-            color: var(--muted);
+        .template-section {
+            margin-bottom: 20px;
         }
 
-        #document-actions {
-            display: flex;
-            justify-content: flex-end;
+        .section-heading {
+            margin: 0 0 16px;
+            font-size: 1.1rem;
+        }
+
+        .template-options {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: 12px;
-            margin: 0 0 18px;
         }
 
-        #print-document {
+        .template-button {
+            min-height: 100px;
+            padding: 16px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--surface-muted);
+            color: var(--text);
+            text-align: left;
+            cursor: pointer;
+            transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
+        }
+
+        .template-button:hover {
+            transform: translateY(-2px);
+            border-color: #9db5e3;
+        }
+
+        .template-button[aria-pressed="true"] {
+            border-color: var(--primary);
+            background: #edf3ff;
+            box-shadow: inset 0 0 0 1px var(--primary);
+        }
+
+        .template-button strong,
+        .template-button span {
+            display: block;
+        }
+
+        .template-button strong {
+            margin-bottom: 7px;
+            font-size: 0.98rem;
+        }
+
+        .template-button span {
+            color: var(--muted);
+            font-size: 0.88rem;
+            line-height: 1.4;
+        }
+
+        button:focus-visible {
+            outline: 3px solid var(--focus);
+            outline-offset: 3px;
+        }
+
+        .preview-heading {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 18px;
+        }
+
+        .preview-heading h2 {
+            margin: 0 0 6px;
+            font-size: 1.2rem;
+        }
+
+        .document-actions {
+            display: flex;
+            flex: 0 0 auto;
+            gap: 10px;
+        }
+
+        .action-button {
+            min-height: 42px;
+            padding: 10px 15px;
+            border: 1px solid var(--primary);
+            border-radius: 9px;
+            background: var(--primary);
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.15s ease, border-color 0.15s ease;
+        }
+
+        .action-button:hover:not(:disabled) {
+            border-color: var(--primary-dark);
+            background: var(--primary-dark);
+        }
+
+        .action-button.secondary {
+            background: var(--surface);
+            color: var(--primary);
+        }
+
+        .action-button.secondary:hover:not(:disabled) {
+            background: #edf3ff;
+        }
+
+        .action-button:disabled {
+            border-color: var(--border);
+            background: #eef1f6;
+            color: #929bad;
+            cursor: not-allowed;
+        }
+
+        .preview-placeholder {
+            display: grid;
+            min-height: 440px;
+            place-items: center;
+            padding: 24px;
+            border: 1px dashed #c8d2e2;
+            border-radius: 12px;
+            background: var(--surface-muted);
+            color: var(--muted);
+            text-align: center;
+        }
+
+        .preview-frame {
+            display: block;
+            width: 100%;
+            height: min(80vh, 1050px);
+            min-height: 560px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: #e9edf4;
+        }
+
+        .preview-frame[hidden] {
             display: none;
         }
 
-        #pdf-render {
-            display: block;
-            width: 100%;
-            max-width: 100%;
-            margin: 0 auto;
-            border-radius: 16px;
-            border: 1px solid var(--border);
-            background: #ffffff;
-            box-shadow: 0 12px 28px rgba(103, 150, 221, 0.12);
+        .preview-placeholder[hidden] {
+            display: none;
         }
 
-        @media (max-width: 640px) {
-            .page {
-                padding: 20px 16px;
+        .status {
+            min-height: 1.4em;
+            margin: 12px 0 0;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 720px) {
+            body {
+                padding: 28px 16px;
             }
 
-            .load-section {
+            .template-section,
+            .preview-section {
+                padding: 18px;
+            }
+
+            .template-options {
                 grid-template-columns: 1fr;
             }
 
-            #controls {
-                flex-wrap: wrap;
+            .template-button {
+                min-height: 0;
+            }
+
+            .preview-heading {
+                flex-direction: column;
             }
         }
 
-        @media print {
-            @page {
-                margin: 0;
-            }
-
-            body {
-                display: block;
-                min-height: 0;
-                padding: 0;
-                background: #ffffff;
-            }
-
-            body > .page {
-                display: none;
-            }
-
-            #print-document {
-                display: block;
+        @media (max-width: 460px) {
+            .document-actions {
                 width: 100%;
             }
 
-            .print-page {
-                display: block;
-                width: 100%;
-                height: 100vh;
-                object-fit: contain;
-                page-break-after: always;
-                break-after: page;
+            .action-button {
+                flex: 1;
+                padding: 10px 8px;
+                font-size: 0.88rem;
             }
 
-            .print-page:last-child {
-                page-break-after: auto;
-                break-after: auto;
+            .preview-frame {
+                min-height: 440px;
             }
         }
     </style>
 </head>
 
 <body>
-    <div class="page">
-        <div class="load-section">
-            <div>
-                <label for="pdf-file">Wybierz plik PDF z komputera</label>
-                <input id="pdf-file" type="file" accept="application/pdf,.pdf" required>
+    <main class="page">
+        <header class="page-heading">
+            <h1>Generator CV</h1>
+            <p>Wybierz jeden z szablonów, aby zobaczyć podgląd przykładowego CV.</p>
+        </header>
+
+        <section class="template-section" aria-labelledby="template-heading">
+            <h2 class="section-heading" id="template-heading">Wybierz szablon</h2>
+            <div class="template-options" aria-label="Szablony CV">
+                <button class="template-button" type="button" data-template="templates/black_white.html"
+                    aria-pressed="false">
+                    <strong>Zdjęcie i układ dwukolumnowy</strong>
+                    <span>Wyrazisty, czarno-biały projekt ze zdjęciem.</span>
+                </button>
+                <button class="template-button" type="button" data-template="templates/no_photo.html"
+                    aria-pressed="false">
+                    <strong>Klasyczny bez zdjęcia</strong>
+                    <span>Przejrzysty układ z naciskiem na doświadczenie.</span>
+                </button>
+                <button class="template-button" type="button" data-template="templates/simple_photo.html"
+                    aria-pressed="false">
+                    <strong>Nowoczesny ze zdjęciem</strong>
+                    <span>Prosty projekt ze zdjęciem i sekcjami CV.</span>
+                </button>
             </div>
-            <button id="load-pdf-file" type="button">Wczytaj plik PDF</button>
-        </div>
-        <p id="pdf-status" role="status" aria-live="polite"></p>
+        </section>
 
-        <div id="controls">
-            <button id="prev-page" disabled>Poprzednia</button>
-            <span>Strona <span id="page-num">1</span> z <span id="page-count">-</span></span>
-            <button id="next-page" disabled>Następna</button>
-        </div>
-
-        <div id="document-actions">
-            <button id="print-pdf" type="button" disabled>Drukuj</button>
-            <button id="save-pdf" type="button" disabled>Zachowaj jako PDF</button>
-        </div>
-
-        <canvas id="pdf-render"></canvas>
-    </div>
-    <div id="print-document" aria-hidden="true"></div>
-
-    <!-- Include PDF.js from CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-    <script src="app.js?v=viewer-fix-1"></script>
+        <section class="preview-section" aria-labelledby="preview-title">
+            <div class="preview-heading">
+                <div>
+                    <h2 id="preview-title">Podgląd CV</h2>
+                    <p>Szablony zawierają przykładowe dane. Formularz do ich edycji powstanie później.</p>
+                </div>
+                <div class="document-actions" aria-label="Akcje dokumentu">
+                    <button class="action-button secondary" id="print-cv" type="button" disabled>Drukuj</button>
+                    <button class="action-button" id="save-cv" type="button" disabled>Zapisz jako PDF</button>
+                </div>
+            </div>
+            <div class="preview-placeholder" id="preview-placeholder">
+                Wybierz szablon powyżej, aby wyświetlić podgląd CV.
+            </div>
+            <iframe class="preview-frame" id="cv-preview" title="Podgląd wybranego szablonu CV" hidden></iframe>
+            <p class="status" id="status" role="status" aria-live="polite"></p>
+        </section>
+    </main>
+    <script src="app.js"></script>
 </body>
 
 </html>
