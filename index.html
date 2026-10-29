@@ -269,6 +269,56 @@
             color: #31543e;
         }
 
+        body.consent-required {
+            overflow: hidden;
+        }
+
+        .consent-overlay {
+            position: fixed;
+            z-index: 1000;
+            inset: 0;
+            display: grid;
+            place-items: center;
+            overflow-y: auto;
+            padding: 24px;
+            background: rgb(25 35 28 / 65%);
+        }
+
+        .consent-overlay[hidden] {
+            display: none;
+        }
+
+        .consent-dialog {
+            width: min(100%, 520px);
+            padding: 28px;
+            border: 1px solid #deded7;
+            border-top: 4px solid #416652;
+            border-radius: 6px;
+            background: white;
+            box-shadow: 0 16px 48px rgb(0 0 0 / 22%);
+        }
+
+        .consent-dialog h2 {
+            margin-top: 0;
+        }
+
+        .consent-dialog > p a {
+            color: #31543e;
+            font-weight: 700;
+        }
+
+        .consent-dialog .consent-row {
+            margin: 20px 0 0;
+        }
+
+        .consent-error {
+            color: #b42318;
+        }
+
+        .consent-dialog button {
+            margin-top: 18px;
+        }
+
         .submit-button:hover {
             background: #243f2e;
             color: white;
@@ -321,14 +371,14 @@
         }
     </style>
 </head>
-<body>
-    <header>
+<body class="consent-required">
+    <header inert>
         <h1>Moje CV</h1>
         <p>Uzupełnij dane, wybierz szablon i przygotuj CV do druku lub zapisu jako PDF.</p>
         <p><span class="required-indicator" aria-hidden="true">*</span> pola wymagane</p>
     </header>
 
-    <main class="editor-layout">
+    <main class="editor-layout" inert>
         <div class="form-column">
             <nav aria-label="Sekcje formularza">
                 <a href="#personal">Dane osobowe</a>
@@ -435,6 +485,26 @@
         </aside>
     </main>
 
+    <section class="consent-overlay" id="consent-overlay" role="dialog" aria-modal="true"
+        aria-labelledby="consent-title" aria-describedby="consent-description">
+        <div class="consent-dialog">
+            <h2 id="consent-title">Zgoda na przetwarzanie danych</h2>
+            <p id="consent-description">
+                <a href="rodo.html" target="_blank" rel="noopener">
+                    Kontynuując, zgadzasz się z polityką przetwarzania danych osobowych.
+                </a>
+            </p>
+            <div class="consent-row">
+                <input class="consent-checkbox" id="rodo-consent" type="checkbox">
+                <label for="rodo-consent">
+                    Wyrażam zgodę na przetwarzanie moich danych osobowych w celu przygotowania CV.
+                </label>
+            </div>
+            <p class="consent-error" id="consent-error" role="alert" aria-live="polite"></p>
+            <button id="consent-continue" type="button" disabled>Kontynuuj</button>
+        </div>
+    </section>
+
     <template id="education-template">
         <div class="entry" data-entry>
             <h3 class="entry-title"></h3>
@@ -518,6 +588,60 @@
                     list.dataset.name + " " + (index + 1);
             });
         }
+
+        (function setupRodoConsent() {
+            const consentKey = "cv-generator-rodo-consent-v1";
+            const appContent = document.querySelectorAll("body > header, body > main");
+            const overlay = document.querySelector("#consent-overlay");
+            const checkbox = document.querySelector("#rodo-consent");
+            const continueButton = document.querySelector("#consent-continue");
+            const errorMessage = document.querySelector("#consent-error");
+
+            function allowAppUse() {
+                overlay.hidden = true;
+                appContent.forEach(function (element) {
+                    element.inert = false;
+                });
+                document.body.classList.remove("consent-required");
+                const editor = document.querySelector("main");
+                if (!editor.querySelector('[data-template][aria-pressed="true"]')) {
+                    editor.querySelector("[data-template]")?.click();
+                }
+                editor.querySelector("input")?.focus();
+            }
+
+            checkbox.focus();
+
+            try {
+                if (window.localStorage.getItem(consentKey) === "true") {
+                    allowAppUse();
+                }
+            } catch (error) {
+                console.error("Nie można odczytać zapisanej zgody RODO:", error);
+                errorMessage.textContent =
+                    "Nie można sprawdzić zapisanej zgody. Zaznacz zgodę, aby spróbować kontynuować.";
+            }
+
+            checkbox.addEventListener("change", function () {
+                continueButton.disabled = !checkbox.checked;
+                errorMessage.textContent = "";
+            });
+
+            continueButton.addEventListener("click", function () {
+                if (!checkbox.checked) return;
+
+                try {
+                    window.localStorage.setItem(consentKey, "true");
+                } catch (error) {
+                    console.error("Nie można zapisać zgody RODO:", error);
+                    errorMessage.textContent =
+                        "Nie można zapisać zgody w tej przeglądarce. Włącz pamięć lokalną, aby korzystać z aplikacji.";
+                    return;
+                }
+
+                allowAppUse();
+            });
+        })();
 
         document.querySelector("#cv-form").addEventListener("submit", function (event) {
             event.preventDefault();
