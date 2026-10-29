@@ -12,6 +12,11 @@ Aplikacja internetowa umożliwiająca dynamiczne generowanie, zarządzanie oraz 
 * **Pełny profil kandydata:** Wprowadzanie i prezentacja danych osobowych, zdjęcia, danych kontaktowych, sekcji certyfikatów oraz odnośników do portfeli/profesjonalnych mediów społecznościowych (LinkedIn, GitHub, Portfolio).
 * **Aktualizacja danych:** Wygodne zarządzanie i rozbudowa bazy CV o nowe wpisy (doświadczenie, certyfikaty itp.).
 
+### Funkcje dostępne w prototypie
+
+* Wybór jednego z trzech przykładowych szablonów CV i podgląd na stronie.
+* Drukowanie wybranego szablonu lub zapis do PDF z poziomu okna drukowania przeglądarki.
+
 ---
 
 ##  Stack Techniczny
@@ -82,4 +87,12 @@ Opis doświadczenia oparty na metodzie problemowo-zadaniowej (**Problem → Rozw
    python -m http.server 8000
    ```
 
-3. Open browser and visit: `http://localhost:8000`
+3. Otwórz `http://localhost:8000` w przeglądarce.
+
+## Struktura projektu
+
+* `index.html` — formularz danych CV.
+* `template_viewer.html` — wybór i podgląd przykładowych szablonów.
+* `app.js` — obsługa wyboru szablonu, podglądu, drukowania i zapisu.
+* `templates/` — trzy gotowe szablony CV.
+* `assets/` — przykładowe zdjęcia używane przez szablony.

@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="resumeR1">
+    <title>Olivia Wilson — Content Marketing Lead</title>
+    <style>
+        :root {
+            font-family: Arial, Helvetica, sans-serif;
+            color: #292929;
+            background: #e4e4e4;
+            font-synthesis: none;
+            text-rendering: optimizeLegibility;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+        }
+
+        main {
+            width: min(100%, 794px);
+            min-height: 1123px;
+            margin: 0 auto;
+            padding: 6.1% 5.4% 5%;
+            background: #f4f4f4;
+            box-shadow: 0 2px 12px rgb(0 0 0 / 15%);
+        }
+
+        h1,
+        h2,
+        h3,
+        p {
+            margin-top: 0;
+        }
+
+        .resume-heading {
+            margin-bottom: 3.8%;
+        }
+
+        h1 {
+            width: 119%;
+            margin-bottom: 0;
+            font-family: Impact, Haettenschweiler, "Arial Narrow Bold", "DejaVu Sans", sans-serif;
+            font-size: clamp(50px, 12.85vw, 102px);
+            font-weight: 900;
+            line-height: 0.94;
+            letter-spacing: 0em;
+            text-transform: uppercase;
+            white-space: nowrap;
+            transform: scaleX(0.84);
+            transform-origin: left center;
+        }
+
+        .resume-grid {
+            display: grid;
+            grid-template-columns: 34% minmax(0, 1fr);
+            align-items: start;
+            gap: 4.4%;
+        }
+
+        .portrait {
+            display: block;
+            width: 100%;
+            aspect-ratio: 5 / 6;
+            object-fit: cover;
+            filter: grayscale(100%);
+        }
+
+        .role {
+            margin: 6.5% 0 3%;
+            padding: 5px 8px;
+            border-radius: 999px;
+            background: #242424;
+            color: #fff;
+            font-size: clamp(8px, 1.3vw, 10px);
+            font-weight: 700;
+            line-height: 1.25;
+            text-align: center;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .contact-list {
+            display: grid;
+            gap: 5px;
+            margin: 0;
+            padding: 0 0 9%;
+            border-bottom: 1px solid #aaa;
+            list-style: none;
+        }
+
+        .contact-list li {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            min-width: 0;
+            font-size: clamp(8px, 1.3vw, 10px);
+            line-height: 1.4;
+        }
+
+        .contact-list a {
+            overflow-wrap: anywhere;
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .contact-icon {
+            display: grid;
+            width: 16px;
+            height: 16px;
+            flex: 0 0 16px;
+            place-items: center;
+            border-radius: 50%;
+            background: #292929;
+            color: #fff;
+            font-size: 9px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .sidebar section {
+            padding-top: 9%;
+            border-bottom: 1px solid #aaa;
+            padding-bottom: 8%;
+        }
+
+        .sidebar h2,
+        .main-content h2 {
+            margin-bottom: 15px;
+            font-size: clamp(9px, 1.55vw, 12px);
+            font-weight: 700;
+            line-height: 1.2;
+            text-transform: uppercase;
+        }
+
+        .sidebar ul,
+        .job ul {
+            margin: 0;
+            padding-left: 19px;
+        }
+
+        .sidebar li,
+        .job li,
+        .education p,
+        .job p,
+        .main-content > section > p {
+            font-size: clamp(9px, 1.75vw, 13px);
+            line-height: 1.3;
+        }
+
+        .sidebar li + li {
+            margin-top: 1px;
+        }
+
+        .sidebar .education {
+            margin: 0 0 14px;
+            font-size: clamp(9px, 1.75vw, 13px);
+            font-style: italic;
+            line-height: 1.35;
+        }
+
+        .main-content > section {
+            padding-top: 10px;
+            border-top: 1px solid #aaa;
+        }
+
+        .main-content h2 {
+            margin-bottom: 16px;
+        }
+
+        .main-content > section > p {
+            margin: 0;
+            padding-bottom: 10px;
+        }
+
+        .main-content .experience {
+            padding-top: 10px;
+            border-top: 1px solid #aaa;
+        }
+
+        .main-content .experience h2 {
+            margin-bottom: 14px;
+        }
+
+        .job + .job {
+            margin-top: 15px;
+        }
+
+        .job h3,
+        .job p {
+            margin-bottom: 0;
+            font-size: clamp(9px, 1.75vw, 13px);
+            line-height: 1.3;
+        }
+
+        .job h3 {
+            font-weight: 700;
+        }
+
+        .job p {
+            font-style: italic;
+        }
+
+        .job ul {
+            margin-top: 1px;
+        }
+
+        .job li + li {
+            margin-top: 1px;
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 0;
+            }
+
+            main {
+                min-height: 100vh;
+                padding: 7% 5% 8%;
+                box-shadow: none;
+            }
+
+            .resume-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .sidebar {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 0 16px;
+            }
+
+            .portrait,
+            .role,
+            .contact-list {
+                grid-column: 1;
+            }
+
+            .sidebar .skills-section,
+            .sidebar .education-section {
+                grid-column: 2;
+            }
+
+            .main-content {
+                grid-row: 2;
+            }
+
+            .sidebar h2,
+            .main-content h2,
+            .sidebar li,
+            .job li,
+            .education p,
+            .job p,
+            .job h3,
+            .main-content > section > p {
+                font-size: 12px;
+            }
+        }
+
+        @media print {
+            @page {
+                size: A4;
+                margin: 0;
+            }
+
+            :root,
+            body {
+                background: #f4f4f4;
+            }
+
+            body {
+                padding: 0;
+            }
+
+            main {
+                width: 210mm;
+                min-height: 297mm;
+                box-shadow: none;
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <header class="resume-heading">
+            <h1>Olivia Wilson</h1>
+        </header>
+
+        <div class="resume-grid">
+            <aside class="sidebar">
+                <img class="portrait" src="../assets/olivia-wilson.png" alt="Olivia Wilson">
+                <p class="role">Content Marketing Lead</p>
+
+                <ul class="contact-list" aria-label="Contact information">
+                    <li>
+                        <span class="contact-icon" aria-hidden="true">●</span>
+                        <span>New York, NY</span>
+                    </li>
+                    <li>
+                        <span class="contact-icon" aria-hidden="true">☎</span>
+                        <a href="tel:+1234567890">+123-456-7890</a>
+                    </li>
+                    <li>
+                        <span class="contact-icon" aria-hidden="true">✉</span>
+                        <a href="mailto:hello@reallygreatsite.com">hello@reallygreatsite.com</a>
+                    </li>
+                </ul>
+
+                <section class="skills-section" aria-labelledby="skills-heading">
+                    <h2 id="skills-heading">Skills</h2>
+                    <ul>
+                        <li>Content Strategy</li>
+                        <li>Editorial Planning</li>
+                        <li>Brand Storytelling</li>
+                        <li>Demand Generation</li>
+                        <li>SEO Strategy</li>
+                        <li>Audience Research</li>
+                        <li>Performance Analytics</li>
+                        <li>Conversion Optimization</li>
+                        <li>Cross-Functional Leadership</li>
+                    </ul>
+                </section>
+
+                <section class="education-section" aria-labelledby="education-heading">
+                    <h2 id="education-heading">Education</h2>
+                    <p class="education">MBA, Strategic Marketing<br>2024 – 2026</p>
+                    <p class="education">BA in Marketing &amp;<br>Communications<br>2020 – 2024</p>
+                </section>
+            </aside>
+
+            <article class="main-content">
+                <section aria-labelledby="profile-heading">
+                    <h2 id="profile-heading">Profile</h2>
+                    <p>Strategic Content Marketing Lead with 18+ years of experience building scalable content ecosystems that drive brand authority and measurable growth. I translate business objectives into compelling narratives, high-performing campaigns, and long-term audience engagement strategies.</p>
+                </section>
+
+                <section class="experience" aria-labelledby="experience-heading">
+                    <h2 id="experience-heading">Experience</h2>
+
+                    <section class="job" aria-labelledby="senior-role">
+                        <h3 id="senior-role">Senior Content Marketing Lead</h3>
+                        <p>Warner &amp; Spencer</p>
+                        <p>2044 – Present</p>
+                        <ul>
+                            <li>Define and execute global content strategy aligned with business and brand objectives</li>
+                            <li>Lead cross-functional content teams including writers, designers, and strategists</li>
+                            <li>Increased organic traffic by 65% within three years</li>
+                            <li>Built full-funnel content architecture supporting demand generation and retention</li>
+                            <li>Implemented performance measurement frameworks to optimize ROI</li>
+                        </ul>
+                    </section>
+
+                    <section class="job" aria-labelledby="manager-role">
+                        <h3 id="manager-role">Content Strategy Manager</h3>
+                        <p>Larana, Inc.</p>
+                        <p>2037 – 2044</p>
+                        <ul>
+                            <li>Developed integrated editorial strategy across digital and offline channels</li>
+                            <li>Scaled inbound lead generation by 48%</li>
+                            <li>Launched thought leadership initiatives strengthening market positioning</li>
+                            <li>Established content governance and brand voice guidelines</li>
+                        </ul>
+                    </section>
+
+                    <section class="job" aria-labelledby="specialist-role">
+                        <h3 id="specialist-role">Content Marketing Specialist</h3>
+                        <p>Salford &amp; Co.</p>
+                        <p>2030 – 2037</p>
+                        <ul>
+                            <li>Created long-form and short-form content supporting growth campaigns</li>
+                            <li>Conducted audience research and keyword strategy development</li>
+                            <li>Collaborated with sales and product teams on messaging alignment</li>
+                        </ul>
+                    </section>
+                </section>
+            </article>
+        </div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="simple photo">
+    <title>Sharya Singh — Web Designer</title>
+    <style>
+        :root {
+            font-family: Arial, Helvetica, sans-serif;
+            color: #202624;
+            background: #ededed;
+            font-synthesis: none;
+            text-rendering: optimizeLegibility;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+        }
+
+        main {
+            width: min(100%, 794px);
+            min-height: 1123px;
+            margin: 0 auto;
+            padding: 6.1% 5.4% 5%;
+            background: #fff;
+            box-shadow: 0 2px 12px rgb(0 0 0 / 12%);
+        }
+
+        h1,
+        h2,
+        h3,
+        p {
+            margin-top: 0;
+        }
+
+        .resume-header {
+            display: grid;
+            grid-template-columns: 22% minmax(0, 1fr);
+            align-items: start;
+            gap: 2.6%;
+            margin-bottom: 24px;
+        }
+
+        .portrait {
+            display: block;
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+        }
+
+        .identity {
+            min-width: 0;
+            padding-top: 8px;
+        }
+
+        h1 {
+            margin-bottom: 2px;
+            font-size: clamp(22px, 4.3vw, 34px);
+            font-weight: 700;
+            line-height: 1.05;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+        }
+
+        .role {
+            margin-bottom: 12px;
+            color: #4a504e;
+            font-size: 16px;
+            letter-spacing: 0.04em;
+        }
+
+        .contact-list {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 7px 12px;
+            margin: 0;
+            padding: 9px 0;
+            border-top: 1px solid #858a88;
+            border-bottom: 1px solid #858a88;
+            list-style: none;
+        }
+
+        .contact-list li {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            min-width: 0;
+            font-size: 10px;
+            line-height: 1.35;
+        }
+
+        .contact-list a {
+            overflow-wrap: anywhere;
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .contact-icon {
+            width: 12px;
+            height: 12px;
+            flex: 0 0 12px;
+            fill: currentColor;
+        }
+
+        section {
+            margin: 0 0 20px;
+        }
+
+        section > h2 {
+            margin-bottom: 12px;
+            padding-bottom: 7px;
+            border-bottom: 1px solid #858a88;
+            font-size: 15px;
+            font-weight: 700;
+            line-height: 1.2;
+            text-transform: uppercase;
+        }
+
+        .profile p,
+        .entry,
+        .skills-list,
+        .reference {
+            font-size: 11px;
+            line-height: 1.35;
+        }
+
+        .profile p {
+            margin-bottom: 0;
+        }
+
+        .entry-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .entry {
+            display: grid;
+            grid-template-columns: 26% minmax(0, 1fr);
+            gap: 2%;
+        }
+
+        .entry-meta p,
+        .entry-content p {
+            margin: 0;
+        }
+
+        .entry-meta p + p {
+            margin-top: 4px;
+        }
+
+        .entry-meta {
+            color: #464c49;
+        }
+
+        .entry-content h3 {
+            margin: 0 0 3px;
+            font-size: 11px;
+            font-weight: 700;
+            line-height: 1.35;
+        }
+
+        .skills-list {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 5px 12px;
+            margin: 0;
+            padding-left: 17px;
+        }
+
+        .references-list {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .reference {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 10px;
+        }
+
+        .reference h3 {
+            margin: 0 0 3px;
+            font-size: 11px;
+            line-height: 1.3;
+        }
+
+        .reference p {
+            margin: 0;
+        }
+
+        .reference address {
+            font-size: 10px;
+            font-style: normal;
+            line-height: 1.5;
+        }
+
+        .reference address strong {
+            margin-right: 4px;
+        }
+
+        @media (max-width: 560px) {
+            body {
+                padding: 0;
+            }
+
+            main {
+                min-height: 100vh;
+                padding: 7% 5% 8%;
+                box-shadow: none;
+            }
+
+            .resume-header {
+                grid-template-columns: 24% minmax(0, 1fr);
+                gap: 4%;
+            }
+
+            .identity {
+                padding-top: 0;
+            }
+
+            .role {
+                font-size: 14px;
+            }
+
+            .contact-list {
+                justify-content: flex-start;
+            }
+
+            .entry {
+                grid-template-columns: 30% minmax(0, 1fr);
+            }
+
+            .skills-list {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 380px) {
+            .resume-header {
+                grid-template-columns: 1fr;
+            }
+
+            .portrait {
+                width: 112px;
+            }
+
+            .entry {
+                grid-template-columns: 1fr;
+                gap: 5px;
+            }
+
+            .references-list {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media print {
+            @page {
+                size: A4;
+                margin: 0;
+            }
+
+            :root,
+            body {
+                background: #fff;
+            }
+
+            body {
+                padding: 0;
+            }
+
+            main {
+                width: 210mm;
+                min-height: 297mm;
+                box-shadow: none;
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <header class="resume-header">
+            <img class="portrait" src="../assets/sharya-singh.png" alt="Sharya Singh">
+
+            <div class="identity">
+                <h1>Sharya Singh</h1>
+                <p class="role">Web Designer</p>
+
+                <ul class="contact-list" aria-label="Contact information">
+                    <li>
+                        <svg class="contact-icon" aria-hidden="true" viewBox="0 0 24 24">
+                            <path d="M6.6 2.9 9.1 2l2.2 5.4-2.1 1.7a15.3 15.3 0 0 0 5.7 5.7l1.7-2.1 5.4 2.2-.9 2.5a3 3 0 0 1-3.3 1.9A19.1 19.1 0 0 1 4.7 6.2a3 3 0 0 1 1.9-3.3Z"/>
+                        </svg>
+                        <a href="tel:+1234567890">+123-456-7890</a>
+                    </li>
+                    <li>
+                        <svg class="contact-icon" aria-hidden="true" viewBox="0 0 24 24">
+                            <path d="M3 5h18a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Zm9 7.2L21 7H3l9 5.2Z"/>
+                        </svg>
+                        <a href="mailto:hello@reallygreatsite.com">hello@reallygreatsite.com</a>
+                    </li>
+                    <li>
+                        <svg class="contact-icon" aria-hidden="true" viewBox="0 0 24 24">
+                            <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm6.9 9h-3a15.7 15.7 0 0 0-1.3-5 8 8 0 0 1 4.3 5ZM12 4.1c.9 1.2 1.6 3.8 1.8 6.9h-3.6c.2-3.1.9-5.7 1.8-6.9ZM4.1 13h3a15.7 15.7 0 0 0 1.3 5 8 8 0 0 1-4.3-5Zm3-2h-3a8 8 0 0 1 4.3-5 15.7 15.7 0 0 0-1.3 5Zm4.9 8.9c-.9-1.2-1.6-3.8-1.8-6.9h3.6c-.2 3.1-.9 5.7-1.8 6.9Zm2.6-1.9a15.7 15.7 0 0 0 1.3-5h3a8 8 0 0 1-4.3 5Z"/>
+                        </svg>
+                        <a href="https://www.reallygreatsite.com">www.reallygreatsite.com</a>
+                    </li>
+                </ul>
+            </div>
+        </header>
+
+        <section class="profile" aria-labelledby="profile-heading">
+            <h2 id="profile-heading">About Me</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        </section>
+
+        <section aria-labelledby="education-heading">
+            <h2 id="education-heading">Education</h2>
+            <div class="entry-list">
+                <article class="entry">
+                    <div class="entry-meta">
+                        <p>2020 - 2023</p>
+                        <p>Wardiere University</p>
+                    </div>
+                    <div class="entry-content">
+                        <h3>Master of IT Management</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sit amet sem nec risus egestas accumsan. In enim nunc, tincidunt ut quam eget, luctus sollicitudin neque.</p>
+                    </div>
+                </article>
+                <article class="entry">
+                    <div class="entry-meta">
+                        <p>2016 - 2020</p>
+                        <p>Borcelle University</p>
+                    </div>
+                    <div class="entry-content">
+                        <h3>Bachelor of Art and Design</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sit amet sem nec risus egestas accumsan. In enim nunc, tincidunt ut quam eget, luctus sollicitudin neque.</p>
+                    </div>
+                </article>
+                <article class="entry">
+                    <div class="entry-meta">
+                        <p>2012 - 2016</p>
+                        <p>Wardiere High School</p>
+                    </div>
+                    <div class="entry-content">
+                        <h3>Major Of Art and Design</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sit amet sem nec risus egestas accumsan. In enim nunc, tincidunt ut quam eget, luctus sollicitudin neque.</p>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section aria-labelledby="experience-heading">
+            <h2 id="experience-heading">Experience</h2>
+            <div class="entry-list">
+                <article class="entry">
+                    <div class="entry-meta">
+                        <p>2020 - 2023</p>
+                        <p>Wardiere Company</p>
+                    </div>
+                    <div class="entry-content">
+                        <h3>Web Designer</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sit amet sem nec risus egestas accumsan. In enim nunc, tincidunt ut quam eget, luctus sollicitudin neque.</p>
+                    </div>
+                </article>
+                <article class="entry">
+                    <div class="entry-meta">
+                        <p>2016 - 2020</p>
+                        <p>Borcelle Studio</p>
+                    </div>
+                    <div class="entry-content">
+                        <h3>Web Designer</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sit amet sem nec risus egestas accumsan. In enim nunc, tincidunt ut quam eget, luctus sollicitudin neque.</p>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section aria-labelledby="skills-heading">
+            <h2 id="skills-heading">Skills</h2>
+            <ul class="skills-list">
+                <li>Web Design Tools</li>
+                <li>Web Accessibility</li>
+                <li>Color Theory</li>
+                <li>UI/UX Design</li>
+                <li>Front-End</li>
+                <li>Version Control</li>
+                <li>SEO Fundamentals</li>
+                <li>Typography</li>
+            </ul>
+        </section>
+
+        <section aria-labelledby="references-heading">
+            <h2 id="references-heading">References</h2>
+            <div class="references-list">
+                <article class="reference">
+                    <div>
+                        <h3>Niranjan Devi</h3>
+                        <p>CEO of Wardiere Company</p>
+                    </div>
+                    <address>
+                        <p><strong>Phone</strong> <a href="tel:+1234567890">123-456-7890</a></p>
+                        <p><strong>Social:</strong> @reallygreatsite</p>
+                    </address>
+                </article>
+                <article class="reference">
+                    <div>
+                        <h3>Aarya Agarwal</h3>
+                        <p>HRD of Wardiere Company</p>
+                    </div>
+                    <address>
+                        <p><strong>Phone</strong> <a href="tel:+1234567890">123-456-7890</a></p>
+                        <p><strong>Social:</strong> @reallygreatsite</p>
+                    </address>
+                </article>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sunder Agarwal — Software Developer">
+    <title>Sunder Agarwal — Software Developer</title>
+    <style>
+        :root {
+            font-family: Arial, Helvetica, sans-serif;
+            color: #202428;
+            background: #f1f2f4;
+            font-synthesis: none;
+            text-rendering: optimizeLegibility;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 10px;
+        }
+
+        main {
+            width: min(100%, 794px);
+            min-height: 1123px;
+            margin: 0 auto;
+            padding: 5%;
+            background: #fff;
+            box-shadow: 0 2px 12px rgb(0 0 0 / 12%);
+        }
+
+        h1,
+        h2,
+        h3,
+        p {
+            margin-top: 0;
+        }
+
+        .resume-header {
+            padding-bottom: 17px;
+            border-bottom: 1px solid #858a8e;
+        }
+
+        h1 {
+            margin-bottom: 2px;
+            font-size: clamp(23px, 4.3vw, 34px);
+            font-weight: 700;
+            line-height: 1.08;
+            text-transform: uppercase;
+        }
+
+        .role {
+            margin-bottom: 10px;
+            font-size: clamp(12px, 1.8vw, 15px);
+            font-weight: 700;
+            letter-spacing: 0.025em;
+        }
+
+        .contact-list {
+            display: grid;
+            gap: 2px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .contact-list li,
+        .contact-list a {
+            color: inherit;
+            font-size: 10px;
+            line-height: 1.3;
+            text-decoration: none;
+        }
+
+        section {
+            padding: 17px 0 15px;
+            border-bottom: 1px solid #858a8e;
+        }
+
+        h2 {
+            margin-bottom: 13px;
+            font-size: 12px;
+            font-weight: 700;
+            line-height: 1.2;
+            text-transform: uppercase;
+        }
+
+        p,
+        li {
+            font-size: 10px;
+            line-height: 1.35;
+        }
+
+        .about p {
+            margin: 0;
+            text-align: justify;
+        }
+
+        .experience h2 {
+            margin-bottom: 14px;
+        }
+
+        .job + .job {
+            margin-top: 16px;
+        }
+
+        .job-heading,
+        .education-heading {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 2px;
+        }
+
+        .job h3,
+        .education h3 {
+            margin: 0;
+            font-size: 11px;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        .job-meta,
+        .education-meta {
+            flex: 0 0 auto;
+            font-size: 10px;
+            line-height: 1.3;
+            text-align: right;
+        }
+
+        .job-meta p,
+        .education-meta p {
+            margin: 0;
+        }
+
+        .job ul {
+            margin: 3px 0 0;
+            padding-left: 17px;
+        }
+
+        .job li + li {
+            margin-top: 1px;
+        }
+
+        .education-details {
+            margin: 5px 0 0;
+        }
+
+        .skills p {
+            margin: 0;
+            word-spacing: 6px;
+        }
+
+        .certifications {
+            border-bottom: 0;
+        }
+
+        .certification-list {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .certification h3 {
+            margin-bottom: 3px;
+            font-size: 11px;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        .certification p {
+            margin: 0;
+        }
+
+        @media (max-width: 520px) {
+            body {
+                padding: 0;
+            }
+
+            main {
+                min-height: 100vh;
+                padding: 42px 7% 32px;
+                box-shadow: none;
+            }
+
+            .job-heading,
+            .education-heading {
+                gap: 8px;
+            }
+
+            .job-meta,
+            .education-meta {
+                max-width: 46%;
+                font-size: 9px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .certification-list {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+        }
+
+        @media print {
+            @page {
+                size: A4;
+                margin: 0;
+            }
+
+            :root {
+                background: #fff;
+            }
+
+            body {
+                padding: 0;
+            }
+
+            main {
+                width: 210mm;
+                min-height: 297mm;
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <header class="resume-header">
+            <h1>Sunder Agarwal</h1>
+            <p class="role">Software Developer</p>
+            <ul class="contact-list" aria-label="Contact information">
+                <li><a href="mailto:hello@reallygreatsite.com">hello@reallygreatsite.com</a></li>
+                <li><a href="tel:+1234567890">+123-456-7890</a></li>
+            </ul>
+        </header>
+
+        <section class="about" aria-labelledby="about-heading">
+            <h2 id="about-heading">About Me</h2>
+            <p>Results-driven Software Developer with 5 years of experience in designing, developing, testing, and maintaining scalable software applications. Proficient in full-stack development, cloud technologies, database management, and software architecture. Experienced in collaborating with cross-functional teams to deliver high-quality software solutions that improve business operations and user experience.</p>
+        </section>
+
+        <section class="experience" aria-labelledby="experience-heading">
+            <h2 id="experience-heading">Work Experience</h2>
+            <article class="job">
+                <div class="job-heading">
+                    <h3>Senior Software Developer</h3>
+                    <div class="job-meta">
+                        <p>IngoudeTech Solutions Pvt. Ltd.</p>
+                        <p>March 2035 – Present</p>
+                    </div>
+                </div>
+                <ul>
+                    <li>Design, develop, and maintain enterprise web applications.</li>
+                    <li>Build scalable backend services and RESTful APIs.</li>
+                    <li>Collaborate with product managers, UI/UX designers, and QA engineers.</li>
+                    <li>Review code, mentor junior developers, and enforce coding standards.</li>
+                    <li>Optimize application performance, security, and scalability.</li>
+                </ul>
+            </article>
+
+            <article class="job">
+                <div class="job-heading">
+                    <h3>Software Developer</h3>
+                    <div class="job-meta">
+                        <p>Borcelle Tech Solutions Pvt. Ltd.</p>
+                        <p>March 2030 – December 2034</p>
+                    </div>
+                </div>
+                <ul>
+                    <li>Developed frontend and backend features for web applications.</li>
+                    <li>Built reusable components and integrated third-party APIs.</li>
+                    <li>Collaborated with QA teams to resolve bugs and improve software quality.</li>
+                    <li>Participated in Agile sprint planning and daily stand-up meetings.</li>
+                    <li>Maintained technical documentation and system specifications.</li>
+                </ul>
+            </article>
+        </section>
+
+        <section class="education" aria-labelledby="education-heading">
+            <h2 id="education-heading">Education</h2>
+            <div class="education-heading">
+                <h3>Senior Software Developer</h3>
+                <div class="education-meta">
+                    <p>Borcelle University</p>
+                    <p>2025 – 2029</p>
+                </div>
+            </div>
+            <p class="education-details">Bachelor of Technology (B.Tech) in Computer Science and Engineering</p>
+        </section>
+
+        <section class="skills" aria-labelledby="skills-heading">
+            <h2 id="skills-heading">Skills</h2>
+            <p>Java Python JavaScript TypeScript C++ SQL</p>
+        </section>
+
+        <section class="certifications" aria-labelledby="certifications-heading">
+            <h2 id="certifications-heading">Certifications</h2>
+            <div class="certification-list">
+                <article class="certification">
+                    <h3>AWS Certified Cloud Practitioner</h3>
+                    <p>Comprehensive training in cloud computing services, architecture, and deployment.</p>
+                </article>
+                <article class="certification">
+                    <h3>Microsoft Azure Fundamentals</h3>
+                    <p>Focused on cloud infrastructure, application hosting, and cloud services.</p>
+                </article>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
