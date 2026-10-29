@@ -43,6 +43,10 @@
             font-size: 22px;
         }
 
+        .required-indicator {
+            color: #b42318;
+        }
+
         nav {
             margin: 20px 0;
         }
@@ -116,6 +120,28 @@
             text-align: center;
         }
 
+        .consent-row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .consent-checkbox {
+            flex: 0 0 auto;
+            width: auto;
+            margin: 4px 0 0;
+        }
+
+        .consent-row label {
+            display: inline;
+        }
+
+        .consent-row a {
+            color: #31543e;
+        }
+
         .submit-button:hover {
             background: #243f2e;
             color: white;
@@ -140,6 +166,7 @@
     <header>
         <h1>Moje CV</h1>
         <p>Uzupełnij formularz swoimi danymi.</p>
+        <p><span class="required-indicator" aria-hidden="true">*</span> pola wymagane</p>
     </header>
 
     <nav aria-label="Sekcje formularza">
@@ -153,12 +180,13 @@
     </nav>
 
     <main>
+        <form id="cv-form">
         <section id="personal">
             <h2>Dane osobowe</h2>
             <div class="fields">
-                <label>Imię i nazwisko<input name="fullName" autocomplete="name"></label>
-                <label>Adres e-mail<input name="email" type="email" autocomplete="email"></label>
-                <label>Numer telefonu<input name="phone" type="tel" autocomplete="tel"></label>
+                <label>Imię i nazwisko <span class="required-indicator" aria-hidden="true">*</span><input name="fullName" autocomplete="name" required></label>
+                <label>Adres e-mail <span class="required-indicator" aria-hidden="true">*</span><input name="email" type="email" autocomplete="email" required></label>
+                <label>Numer telefonu <span class="required-indicator" aria-hidden="true">*</span><input name="phone" type="tel" autocomplete="tel" required></label>
                 <label>Miasto<input name="address" autocomplete="address-level2"></label>
                 <label>LinkedIn<input name="linkedin" type="url"></label>
                 <label>GitHub<input name="github" type="url"></label>
@@ -202,8 +230,14 @@
         </section>
 
         <div class="submit-row">
-            <a class="submit-button" href="thankYou.html">Wyslij</a>
+            <div class="consent-row">
+                <input class="consent-checkbox" id="privacy-notice" name="privacyNotice" type="checkbox" required>
+                <label for="privacy-notice"><span class="required-indicator" aria-hidden="true">*</span>Potwierdzam zapoznanie się z </label>
+                <a href="rodo.html" target="_blank" rel="noopener">klauzulą informacyjną RODO</a>
+            </div>
+            <button class="submit-button" type="submit">Wyslij</button>
         </div>
+        </form>
     </main>
 
     <template id="education-template">
@@ -288,6 +322,11 @@
                     list.dataset.name + " " + (index + 1);
             });
         }
+
+        document.querySelector("#cv-form").addEventListener("submit", function (event) {
+            event.preventDefault();
+            window.location.href = "thankYou.html";
+        });
     </script>
 </body>
 </html>
