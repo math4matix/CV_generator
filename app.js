@@ -224,7 +224,10 @@ const renderPreview = () => {
 
   const data = readForm();
   const templateName = selectedTemplate.split('/').pop();
-  const name = String(data.fullName || '').trim();
+  const name = [data.firstName, data.lastName]
+    .map((part) => String(part || '').trim())
+    .filter(Boolean)
+    .join(' ');
   const nameHeading = main.querySelector('h1');
   nameHeading.textContent = name;
 
