@@ -3,7 +3,8 @@ const defaultUrl = 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pd
 let pdfDoc = null,
     pageNum = 1,
     pageIsRendering = false,
-    pageNumIsPending = null;
+    pageNumIsPending = null,
+    pdfFileName = 'document.pdf';
 
 const scale = 1.5,
       canvas = document.getElementById('pdf-render'),
@@ -17,6 +18,9 @@ const pageNumber = document.getElementById('page-num');
 const pageCount = document.getElementById('page-count');
 const previousButton = document.getElementById('prev-page');
 const nextButton = document.getElementById('next-page');
+const printButton = document.getElementById('print-pdf');
+const saveButton = document.getElementById('save-pdf');
+const printDocument = document.getElementById('print-document');
 
 if (typeof pdfjsLib === 'undefined') {
   status.textContent = 'Biblioteka do podglądu PDF nie mogła zostać załadowana. Sprawdź połączenie z internetem i odśwież stronę.';
@@ -32,6 +36,8 @@ urlInput.value = defaultUrl;
 const updateNavigation = () => {
   previousButton.disabled = !pdfDoc || pageNum <= 1;
   nextButton.disabled = !pdfDoc || pageNum >= pdfDoc.numPages;
+  printButton.disabled = !pdfDoc;
+  saveButton.disabled = !pdfDoc;
 };
 
 const renderPage = async (num) => {
@@ -95,8 +101,9 @@ nextButton.addEventListener('click', () => {
   queueRenderPage(pageNum);
 });
 
-const loadPdf = async (source, loadButton) => {
+const loadPdf = async (source, loadButton, fileName) => {
   pdfDoc = null;
+  pdfFileName = fileName || 'document.pdf';
   pageIsRendering = false;
   pageNumIsPending = null;
   pageNum = 1;
@@ -127,7 +134,15 @@ const loadUrl = async () => {
   if (!urlInput.reportValidity()) return;
 
   loadUrlButton.disabled = true;
-  await loadPdf(url, loadUrlButton);
+  let fileName = 'document.pdf';
+  try {
+    const urlPath = new URL(url).pathname;
+    const lastPathPart = urlPath.split('/').pop();
+    if (lastPathPart) fileName = decodeURIComponent(lastPathPart);
+  } catch (error) {
+    console.warn('Could not determine PDF file name:', error);
+  }
+  await loadPdf(url, loadUrlButton, fileName);
 };
 
 const loadFile = async () => {
@@ -141,7 +156,7 @@ const loadFile = async () => {
   loadFileButton.disabled = true;
   try {
     const data = new Uint8Array(await file.arrayBuffer());
-    await loadPdf({ data }, loadFileButton);
+    await loadPdf({ data }, loadFileButton, file.name);
   } catch (error) {
     console.error('Error reading PDF file:', error);
     status.textContent = `Nie można odczytać tego pliku PDF: ${error.message}`;
@@ -157,6 +172,66 @@ urlInput.addEventListener('keydown', (event) => {
   }
 });
 loadFileButton.addEventListener('click', loadFile);
+
+printButton.addEventListener('click', async () => {
+  if (!pdfDoc) return;
+
+  printButton.disabled = true;
+  printButton.textContent = 'Przygotowywanie...';
+  printDocument.replaceChildren();
+
+  try {
+    const currentPdf = pdfDoc;
+    for (let number = 1; number <= currentPdf.numPages; number++) {
+      const page = await currentPdf.getPage(number);
+      const viewport = page.getViewport({ scale });
+      const pageCanvas = document.createElement('canvas');
+      pageCanvas.width = viewport.width;
+      pageCanvas.height = viewport.height;
+      await page.render({
+        canvasContext: pageCanvas.getContext('2d'),
+        viewport
+      }).promise;
+
+      const image = document.createElement('img');
+      image.className = 'print-page';
+      image.src = pageCanvas.toDataURL('image/png');
+      image.alt = `Strona ${number}`;
+      printDocument.append(image);
+    }
+
+    window.print();
+  } catch (error) {
+    console.error('Error preparing PDF for printing:', error);
+    status.textContent = `Nie można przygotować dokumentu do drukowania: ${error.message}`;
+  } finally {
+    printButton.textContent = 'Drukuj';
+    updateNavigation();
+  }
+});
+
+saveButton.addEventListener('click', async () => {
+  if (!pdfDoc) return;
+
+  saveButton.disabled = true;
+  try {
+    const data = await pdfDoc.getData();
+    const blob = new Blob([data], { type: 'application/pdf' });
+    const downloadUrl = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = downloadUrl;
+    link.download = pdfFileName.toLowerCase().endsWith('.pdf')
+      ? pdfFileName
+      : `${pdfFileName}.pdf`;
+    link.click();
+    URL.revokeObjectURL(downloadUrl);
+  } catch (error) {
+    console.error('Error saving PDF:', error);
+    status.textContent = `Nie można zapisać pliku PDF: ${error.message}`;
+  } finally {
+    updateNavigation();
+  }
+});
 
 if (typeof pdfjsLib !== 'undefined') {
   loadPdf(defaultUrl, loadUrlButton);

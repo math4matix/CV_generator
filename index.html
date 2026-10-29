@@ -127,6 +127,17 @@
             color: var(--muted);
         }
 
+        #document-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin: 0 0 18px;
+        }
+
+        #print-document {
+            display: none;
+        }
+
         #pdf-render {
             display: block;
             width: 100%;
@@ -149,6 +160,42 @@
 
             #controls {
                 flex-wrap: wrap;
+            }
+        }
+
+        @media print {
+            @page {
+                margin: 0;
+            }
+
+            body {
+                display: block;
+                min-height: 0;
+                padding: 0;
+                background: #ffffff;
+            }
+
+            body > .page {
+                display: none;
+            }
+
+            #print-document {
+                display: block;
+                width: 100%;
+            }
+
+            .print-page {
+                display: block;
+                width: 100%;
+                height: 100vh;
+                object-fit: contain;
+                page-break-after: always;
+                break-after: page;
+            }
+
+            .print-page:last-child {
+                page-break-after: auto;
+                break-after: auto;
             }
         }
     </style>
@@ -178,8 +225,14 @@
             <button id="next-page" disabled>Następna</button>
         </div>
 
+        <div id="document-actions">
+            <button id="print-pdf" type="button" disabled>Drukuj</button>
+            <button id="save-pdf" type="button" disabled>Zachowaj jako PDF</button>
+        </div>
+
         <canvas id="pdf-render"></canvas>
     </div>
+    <div id="print-document" aria-hidden="true"></div>
 
     <!-- Include PDF.js from CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
