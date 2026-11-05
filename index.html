@@ -135,13 +135,17 @@
         }
 
         .document-actions {
-            display: flex;
-            flex: 0 0 auto;
+            display: grid;
+            flex: 0 1 430px;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: 8px;
         }
 
         .document-actions button {
             margin: 0;
+            min-width: 0;
+            padding: 8px;
+            font-size: 0.9rem;
         }
 
         button:disabled {
@@ -472,14 +476,17 @@
                         <p>Podgląd aktualizuje się na bieżąco podczas edycji formularza.</p>
                     </div>
                     <div class="document-actions" aria-label="Akcje dokumentu">
-                        <button id="print-cv" type="button" disabled>Drukuj</button>
-                        <button class="submit-button" id="save-cv" type="button" disabled>Zapisz jako PDF</button>
+                        <button class="submit-button" id="print-cv" type="button" disabled>Drukuj</button>
+                        <button id="open-cv" type="button">Otwórz CV</button>
+                        <button id="save-cv" type="button" disabled>Zapisz CV</button>
                     </div>
                 </div>
                 <div class="preview-placeholder" id="preview-placeholder">
                     Wybierz szablon powyżej, aby wyświetlić podgląd CV.
                 </div>
-                <iframe class="preview-frame" id="cv-preview" title="Podgląd wybranego szablonu CV" hidden></iframe>
+                <input id="load-cv-file" type="file" accept=".json,application/json" hidden>
+                <iframe class="preview-frame" id="cv-preview" title="Podgląd wybranego szablonu CV"
+                    sandbox="allow-same-origin allow-modals" hidden></iframe>
                 <p class="status" id="status" role="status" aria-live="polite"></p>
             </section>
         </aside>

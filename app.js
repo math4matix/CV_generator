@@ -3,6 +3,8 @@ const preview = document.getElementById('cv-preview');
 const placeholder = document.getElementById('preview-placeholder');
 const printButton = document.getElementById('print-cv');
 const saveButton = document.getElementById('save-cv');
+const openButton = document.getElementById('open-cv');
+const loadInput = document.getElementById('load-cv-file');
 const status = document.getElementById('status');
 const form = document.getElementById('cv-form');
 
@@ -54,6 +56,109 @@ const safeUrl = (value) => {
   } catch {
     return null;
   }
+};
+
+const fileToDataUrl = (file) => new Promise((resolve, reject) => {
+  const reader = new FileReader();
+  reader.onload = () => resolve(reader.result);
+  reader.onerror = () => reject(reader.error);
+  reader.readAsDataURL(file);
+});
+
+const serializeFile = async (file) => {
+  if (!file?.name) return null;
+  return {
+    name: file.name,
+    type: file.type,
+    dataUrl: await fileToDataUrl(file),
+  };
+};
+
+const restoreFile = async (savedFile) => {
+  if (!savedFile?.dataUrl || !savedFile.name) return null;
+  const blob = await (await fetch(savedFile.dataUrl)).blob();
+  return new File([blob], savedFile.name, { type: savedFile.type || blob.type });
+};
+
+const assignFile = (input, file) => {
+  if (!file) {
+    input.value = '';
+    return;
+  }
+  const transfer = new DataTransfer();
+  transfer.items.add(file);
+  input.files = transfer.files;
+};
+
+const serializeCv = async () => {
+  const data = readForm();
+  data.photo = await serializeFile(form.querySelector('[name="photo"]').files[0]);
+  delete data.certificateFile;
+  for (const certificate of data.certificates) {
+    certificate.certificateFile = await serializeFile(certificate.certificateFile);
+  }
+  return {
+    format: 'cv-generator',
+    version: 1,
+    template: selectedTemplate,
+    data,
+  };
+};
+
+const populateForm = async (savedCv) => {
+  if (savedCv?.format !== 'cv-generator' || savedCv.version !== 1 ||
+    !savedCv.data || typeof savedCv.data !== 'object') {
+    throw new Error('Plik nie jest zapisanym CV z tego generatora.');
+  }
+
+  const data = savedCv.data;
+  const dynamicFields = new Set([
+    'school', 'fieldOfStudy', 'schoolAddress', 'educationFrom', 'educationTo',
+    'jobTitle', 'company', 'experienceFrom', 'experienceTo', 'result',
+    'language', 'languageLevel', 'certificateName', 'certificateUrl', 'certificateFile',
+  ]);
+  form.querySelectorAll('[name]').forEach((control) => {
+    if (control.type !== 'file' && !dynamicFields.has(control.name) &&
+      Object.hasOwn(data, control.name)) {
+      control.value = data[control.name] ?? '';
+    }
+  });
+
+  const sections = [
+    { id: 'education', template: 'education-template', key: 'education' },
+    { id: 'experience', template: 'experience-template', key: 'experience' },
+    { id: 'languages', template: 'languages-template', key: 'languages' },
+    { id: 'certificates', template: 'certificates-template', key: 'certificates' },
+  ];
+  for (const section of sections) {
+    const list = form.querySelector(`#${section.id} .entry-list`);
+    const template = document.getElementById(section.template);
+    list.replaceChildren();
+    for (const [index, values] of (Array.isArray(data[section.key]) ? data[section.key] : []).entries()) {
+      const entry = template.content.firstElementChild.cloneNode(true);
+      entry.querySelector('.entry-title').textContent = `${list.dataset.name} ${index + 1}`;
+      for (const control of entry.querySelectorAll('[name]')) {
+        const value = values[control.name];
+        if (control.type === 'file') {
+          assignFile(control, await restoreFile(value));
+        } else if (value !== undefined) {
+          control.value = value;
+        }
+      }
+      list.append(entry);
+    }
+  }
+
+  const photoInput = form.querySelector('[name="photo"]');
+  const photo = await restoreFile(data.photo);
+  if (photoUrl?.startsWith('blob:')) URL.revokeObjectURL(photoUrl);
+  assignFile(photoInput, photo);
+  photoUrl = photo ? URL.createObjectURL(photo) : null;
+
+  const templateButton = [...templateButtons].find((button) =>
+    button.dataset.template === savedCv.template,
+  ) || templateButtons[0];
+  templateButton?.click();
 };
 
 const sectionByHeading = (document, phrase) =>
@@ -437,7 +542,50 @@ const openPrintDialog = (saveAsPdf) => {
   }
 };
 
+const saveCv = async () => {
+  try {
+    const savedCv = await serializeCv();
+    const blob = new Blob([JSON.stringify(savedCv, null, 2)], {
+      type: 'application/json;charset=utf-8',
+    });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'moje-cv.json';
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    status.textContent = 'Zapisano dane CV do pliku moje-cv.json.';
+  } catch (error) {
+    console.error('Nie można zapisać CV:', error);
+    status.textContent = 'Nie udało się zapisać CV. Spróbuj ponownie.';
+  }
+};
+
+const loadExistingCv = async (file) => {
+  try {
+    const savedCv = JSON.parse(await file.text());
+    await populateForm(savedCv);
+    status.textContent = 'CV wczytane. Formularz został uzupełniony danymi.';
+  } catch (error) {
+    status.textContent = error instanceof Error
+      ? error.message
+      : 'Nie udało się wczytać pliku CV.';
+  }
+};
+
+openButton.addEventListener('click', () => loadInput.click());
+loadInput.addEventListener('change', () => {
+  const file = loadInput.files[0];
+  loadInput.value = '';
+  if (!file) return;
+  if (!file.name.toLowerCase().endsWith('.json') && file.type !== 'application/json') {
+    status.textContent = 'Wybierz plik CV zapisany w formacie JSON.';
+    return;
+  }
+  loadExistingCv(file);
+});
+
 printButton.addEventListener('click', () => openPrintDialog(false));
-saveButton.addEventListener('click', () => openPrintDialog(true));
+saveButton.addEventListener('click', saveCv);
 
 templateButtons[0]?.click();
