@@ -351,7 +351,9 @@ templateButtons.forEach((button) => {
     placeholder.hidden = true;
     preview.hidden = false;
     status.textContent = 'Ładowanie wybranego szablonu...';
-    preview.src = selectedTemplate;
+    const templateUrl = new URL(selectedTemplate, window.location.href);
+    templateUrl.searchParams.set('preview', Date.now());
+    preview.src = templateUrl.href;
   });
 });
 
