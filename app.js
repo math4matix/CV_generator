@@ -7,15 +7,37 @@ const openButton = document.getElementById('open-cv');
 const loadInput = document.getElementById('load-cv-file');
 const status = document.getElementById('status');
 const form = document.getElementById('cv-form');
+const translateButton = document.getElementById('translate-cv');
+const originalButton = document.getElementById('show-original-cv');
+const translationEndpointConfig = document.querySelector('meta[name="translation-endpoint"]')?.content.trim() || '';
+
+const normalizeTranslationEndpoint = (value) => {
+  if (!value) return '';
+  const normalizedValue = /^[a-z][a-z\d+.-]*:/i.test(value) ? value : `https://${value}`;
+  return new URL(normalizedValue).href;
+};
+
+let translationEndpoint = '';
+try {
+  translationEndpoint = normalizeTranslationEndpoint(translationEndpointConfig);
+} catch {
+  translationEndpoint = '';
+}
 
 let selectedTemplate = null;
 let isPreviewReady = false;
 let photoUrl = null;
 let fitFrame = null;
+let translatedData = null;
+let isTranslating = false;
+let formRevision = 0;
 
 const setActionsEnabled = (enabled) => {
   printButton.disabled = !enabled;
   saveButton.disabled = !enabled;
+  if (translateButton) {
+    translateButton.disabled = !enabled || !translationEndpoint || isTranslating;
+  }
 };
 
 const readForm = () => {
@@ -41,9 +63,10 @@ const createElement = (document, tag, className, text) => {
   return element;
 };
 
-const displayDate = (from, to) => {
+const displayDate = (from, to, isEnglish = false) => {
   const format = (date) => date ? date.replace('-', '/') : '';
-  return [format(from), format(to) || (from ? 'obecnie' : '')].filter(Boolean).join(' – ');
+  return [format(from), format(to) || (from ? (isEnglish ? 'Present' : 'obecnie') : '')]
+    .filter(Boolean).join(' – ');
 };
 
 const splitItems = (text) => text.split(/[\n,]+/).map((item) => item.trim()).filter(Boolean);
@@ -112,6 +135,10 @@ const populateForm = async (savedCv) => {
   }
 
   const data = savedCv.data;
+  translatedData = null;
+  formRevision += 1;
+  originalButton.hidden = true;
+  translateButton.textContent = 'Tłumacz CV na angielski';
   const dynamicFields = new Set([
     'school', 'fieldOfStudy', 'schoolAddress', 'educationFrom', 'educationTo',
     'jobTitle', 'company', 'experienceFrom', 'experienceTo', 'result',
@@ -174,6 +201,100 @@ const appendGeneratedSection = (document, main, title, values) => {
   section.append(list);
   main.querySelector('.cv-fit-content')?.append(section);
   return section;
+};
+
+const englishHeadings = new Map([
+  ['umiejętności', 'Skills'],
+  ['skills', 'Skills'],
+  ['edukacja', 'Education'],
+  ['education', 'Education'],
+  ['doświadczenie', 'Experience'],
+  ['doświadczenie zawodowe', 'Experience'],
+  ['experience', 'Experience'],
+  ['profil', 'Profile'],
+  ['profile', 'Profile'],
+  ['o mnie', 'About Me'],
+  ['about', 'About Me'],
+  ['about me', 'About Me'],
+  ['certyfikaty i szkolenia', 'Certifications'],
+  ['certifications', 'Certifications'],
+  ['języki', 'Languages'],
+  ['języki obce', 'Languages'],
+  ['languages', 'Languages'],
+  ['zainteresowania', 'Interests'],
+  ['interests', 'Interests'],
+  ['references', 'References'],
+]);
+
+const applyEnglishHeadings = (document) => {
+  document.querySelectorAll('main h2').forEach((heading) => {
+    const translation = englishHeadings.get(heading.textContent.trim().toLocaleLowerCase('pl'));
+    if (translation) heading.textContent = translation;
+  });
+};
+
+const getTranslatableFields = (data) => [
+  ...['skills', 'interests'].map((key) => ({ object: data, key })),
+  ...data.education.map((entry) => ({ object: entry, key: 'fieldOfStudy' })),
+  ...data.experience.flatMap((entry) => [
+    { object: entry, key: 'jobTitle' },
+    { object: entry, key: 'result' },
+  ]),
+  ...data.languages.map((entry) => ({ object: entry, key: 'language' })),
+  ...data.certificates.map((entry) => ({ object: entry, key: 'certificateName' })),
+].filter(({ object, key }) => typeof object[key] === 'string' && object[key].trim());
+
+const requestTranslations = async (texts) => {
+  if (texts.reduce((sum, text) => sum + text.length, 0) > 12000) {
+    throw new Error('Tekst CV przekracza limit 12 000 znaków na jedno tłumaczenie.');
+  }
+  let endpoint;
+  try {
+    endpoint = new URL(normalizeTranslationEndpoint(translationEndpoint));
+  } catch {
+    throw new Error('Adres usługi tłumaczenia jest nieprawidłowy. Użyj pełnego adresu https://.');
+  }
+  if (endpoint.protocol !== 'https:' &&
+    !(endpoint.protocol === 'http:' && ['localhost', '127.0.0.1'].includes(endpoint.hostname))) {
+    throw new Error('Adres usługi tłumaczenia musi używać HTTPS.');
+  }
+
+  const translations = [];
+  for (let index = 0; index < texts.length; index += 50) {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ texts: texts.slice(index, index + 50) }),
+    });
+    const result = await response.json().catch(() => null);
+    if (!response.ok) {
+      throw new Error(result?.error || `Usługa tłumaczenia zwróciła błąd (${response.status}).`);
+    }
+    if (!Array.isArray(result?.translations) ||
+      result.translations.length !== Math.min(50, texts.length - index) ||
+      result.translations.some((text) => typeof text !== 'string')) {
+      throw new Error('Usługa tłumaczenia zwróciła nieprawidłową odpowiedź.');
+    }
+    translations.push(...result.translations);
+  }
+  return translations;
+};
+
+const createTranslatedData = async () => {
+  const sourceData = readForm();
+  const data = {
+    ...sourceData,
+    education: sourceData.education.map((entry) => ({ ...entry })),
+    experience: sourceData.experience.map((entry) => ({ ...entry })),
+    languages: sourceData.languages.map((entry) => ({ ...entry })),
+    certificates: sourceData.certificates.map((entry) => ({ ...entry })),
+  };
+  const fields = getTranslatableFields(data);
+  const translations = await requestTranslations(fields.map(({ object, key }) => object[key]));
+  fields.forEach(({ object, key }, index) => {
+    object[key] = translations[index];
+  });
+  return data;
 };
 
 const fitPreviewToPage = () => {
@@ -240,7 +361,7 @@ const renderExperience = (document, section, data, templateName) => {
   entries.forEach((entry) => {
     const title = entry.jobTitle.trim();
     const company = entry.company.trim();
-    const date = displayDate(entry.experienceFrom, entry.experienceTo);
+    const date = displayDate(entry.experienceFrom, entry.experienceTo, Boolean(translatedData));
     const details = splitItems(entry.result || '');
 
     if (templateName === 'simple_photo.html') {
@@ -293,7 +414,7 @@ const renderEducation = (document, section, data, templateName) => {
     const school = entry.school.trim();
     const field = entry.fieldOfStudy.trim();
     const address = entry.schoolAddress.trim();
-    const date = displayDate(entry.educationFrom, entry.educationTo);
+    const date = displayDate(entry.educationFrom, entry.educationTo, Boolean(translatedData));
 
     if (templateName === 'black_white.html') {
       const details = [field, address, date].filter(Boolean).join(' · ');
@@ -327,7 +448,8 @@ const renderPreview = () => {
   const main = document?.querySelector('main');
   if (!document || !main) return;
 
-  const data = readForm();
+  const data = translatedData || readForm();
+  document.documentElement.lang = translatedData ? 'en-US' : 'pl';
   const templateName = selectedTemplate.split('/').pop();
   const name = [data.firstName, data.lastName]
     .map((part) => String(part || '').trim())
@@ -443,6 +565,7 @@ const renderPreview = () => {
   if (languages.length) {
     appendGeneratedSection(document, main, 'Języki', languages).classList.add('generated-languages');
   }
+  if (translatedData) applyEnglishHeadings(document);
   schedulePreviewFit();
 };
 
@@ -500,16 +623,22 @@ preview.addEventListener('load', () => {
   preview.contentWindow.addEventListener('beforeprint', fitPreviewToPage);
   preview.contentWindow.addEventListener('afterprint', schedulePreviewFit);
   renderPreview();
-  status.textContent = 'Podgląd CV jest aktualny.';
+  status.textContent = form && !translationEndpoint
+    ? 'Podgląd CV jest aktualny. Aby włączyć tłumaczenie, skonfiguruj adres Cloudflare Worker w index.html.'
+    : 'Podgląd CV jest aktualny.';
 });
 
 if (form) {
   form.addEventListener('submit', (event) => event.preventDefault());
-  form.addEventListener('input', renderPreview);
+  form.addEventListener('input', () => {
+      invalidateTranslation();
+      renderPreview();
+  });
   form.addEventListener('change', (event) => {
-    if (event.target.name === 'photo') {
-      const photo = event.target.files[0];
-      if (photoUrl) URL.revokeObjectURL(photoUrl);
+      invalidateTranslation();
+      if (event.target.name === 'photo') {
+        const photo = event.target.files[0];
+        if (photoUrl) URL.revokeObjectURL(photoUrl);
       photoUrl = null;
       if (photo) {
         photoUrl = URL.createObjectURL(photo);
@@ -520,12 +649,22 @@ if (form) {
 
   form.addEventListener('click', (event) => {
     if (event.target.closest('[data-add], [data-remove]')) {
+      invalidateTranslation();
       requestAnimationFrame(renderPreview);
     }
   });
 }
 
 window.addEventListener('resize', schedulePreviewFit);
+
+const invalidateTranslation = () => {
+  formRevision += 1;
+  if (!translatedData) return;
+  translatedData = null;
+  originalButton.hidden = true;
+  translateButton.textContent = 'Tłumacz CV na angielski';
+  status.textContent = 'Formularz został zmieniony. Wyświetlany jest oryginał CV.';
+};
 
 const openPrintDialog = (saveAsPdf) => {
   if (!isPreviewReady || !preview.contentWindow) return;
@@ -589,5 +728,50 @@ loadInput.addEventListener('change', () => {
 
 printButton.addEventListener('click', () => openPrintDialog(false));
 saveButton.addEventListener('click', saveCv);
+translateButton?.addEventListener('click', async () => {
+  if (!translationEndpoint) {
+    status.textContent = 'Najpierw skonfiguruj adres Cloudflare Worker w index.html.';
+    return;
+  }
+
+  isTranslating = true;
+  const revisionAtStart = formRevision;
+  translateButton.disabled = true;
+  originalButton.disabled = true;
+  status.textContent = 'Tłumaczenie CV na angielski...';
+  try {
+    const result = await createTranslatedData();
+    if (revisionAtStart !== formRevision) {
+      throw new Error('Formularz został zmieniony podczas tłumaczenia. Spróbuj ponownie.');
+    }
+    translatedData = result;
+    originalButton.hidden = false;
+    translateButton.textContent = 'Przetłumacz ponownie';
+    renderPreview();
+    status.textContent = 'Podgląd CV został przetłumaczony. Oryginalne dane formularza nie zostały zmienione.';
+  } catch (error) {
+    console.error('Nie udało się przetłumaczyć CV:', error);
+    status.textContent = error instanceof Error
+      ? `Nie udało się przetłumaczyć CV: ${error.message}`
+      : 'Nie udało się przetłumaczyć CV. Spróbuj ponownie.';
+  } finally {
+    isTranslating = false;
+    originalButton.disabled = false;
+    setActionsEnabled(isPreviewReady);
+  }
+});
+
+originalButton?.addEventListener('click', () => {
+  formRevision += 1;
+  translatedData = null;
+  originalButton.hidden = true;
+  translateButton.textContent = 'Tłumacz CV na angielski';
+  renderPreview();
+  status.textContent = 'Wyświetlany jest oryginał CV.';
+});
+
+if (form && !translationEndpoint) {
+  status.textContent = 'Aby włączyć tłumaczenie, skonfiguruj adres Cloudflare Worker w index.html.';
+}
 
 templateButtons[0]?.click();

@@ -15,12 +15,50 @@ Aplikacja internetowa umożliwiająca dynamiczne generowanie, zarządzanie oraz 
 ### Funkcje dostępne w prototypie
 
 * Edytor CV na stronie głównej z formularzem po lewej i wyborem szablonów oraz podglądem po prawej.
+* Tłumaczenie wybranych pól CV na angielski przez DeepL API Free; nagłówki sekcji są tłumaczone lokalnie. Oryginalny formularz pozostaje bez zmian.
 * Wybór jednego z trzech przykładowych szablonów CV; podgląd pierwszego szablonu ładuje się automatycznie.
 * Drukowanie wybranego szablonu lub zapis do PDF z poziomu okna drukowania przeglądarki.
 * Zapis formularza CV do pliku JSON, w tym zdjęcia i załączników certyfikatów.
 * Otwieranie zapisanego pliku CV i automatyczne uzupełnianie formularza, także sekcji dodawanych dynamicznie.
 * Podgląd aktualizuje się w czasie rzeczywistym na podstawie danych z formularza, w tym sekcji dodawanych dynamicznie i zdjęcia.
 * Zawartość CV skaluje się tak, aby mieściła się na jednej stronie A4, również podczas drukowania lub zapisu do PDF.
+
+## Konfiguracja tłumaczenia DeepL na GitHub Pages
+
+GitHub Pages udostępnia wyłącznie pliki statyczne, dlatego klucz DeepL nie może być umieszczony w `app.js`, HTML ani w repozytorium. Aplikacja używa Cloudflare Worker jako pośrednika; Worker wysyła wyłącznie wskazane teksty do DeepL, a zdjęcie i dane kontaktowe nie są tłumaczone ani wysyłane.
+
+### 1. Uzyskaj klucz DeepL API Free
+
+1. Utwórz konto DeepL API Free i skopiuj klucz uwierzytelniający API z ustawień konta.
+2. Nie umieszczaj klucza w plikach projektu, GitHub Pages, issue ani publicznym repozytorium. Klucz Free korzysta z endpointu `https://api-free.deepl.com`.
+
+### 2. Utwórz Cloudflare Worker
+
+1. Zaloguj się do Cloudflare, otwórz **Workers & Pages** i utwórz Worker na planie Free (sprawdź aktualne limity planu).
+2. W edytorze kodu Worker zastąp przykładową zawartość treścią pliku [`cloudflare/worker.js`](./cloudflare/worker.js), a następnie opublikuj Worker.
+3. W ustawieniach Worker dodaj sekret `DEEPL_API_KEY` z kluczem DeepL oraz zmienną tekstową `ALLOWED_ORIGINS`. Wartość dla tego repozytorium to `https://math4matix.github.io`; podczas lokalnego testowania możesz dodać przecinkiem `http://localhost:8000`. Jeżeli używasz własnej domeny, dodaj jej origin (protokół i domena, bez ścieżki).
+   Originy GitHub Codespaces są obsługiwane przez przykładowego Workera automatycznie dla adresów `https://*.app.github.dev`.
+4. Zapisz zmienne i ponownie opublikuj Worker. Skopiuj jego publiczny adres URL.
+5. Jeśli panel Cloudflare udostępnia reguły limitowania żądań Workerów na Twoim planie, skonfiguruj limit dla endpointu. Lista dozwolonych originów CORS ogranicza wywołania z przeglądarek, ale sama w sobie nie blokuje bezpośrednich żądań spoza przeglądarki. Monitoruj zużycie limitu DeepL.
+
+### 3. Podłącz Worker do strony
+
+W [`index.html`](./index.html) wstaw skopiowany URL Worker jako wartość `content` w metadanej:
+
+```html
+<meta name="translation-endpoint" content="https://TWOJ-WORKER.TWOJE-KONTO.workers.dev">
+```
+
+Zapisz i wypchnij zmiany do gałęzi publikowanej przez GitHub Pages. W repozytorium sprawdź **Settings → Pages**, aby potwierdzić adres strony. Origin strony (bez ścieżki `/CV_generator`) musi dokładnie odpowiadać jednej z wartości `ALLOWED_ORIGINS`.
+
+### 4. Sprawdź działanie
+
+1. Uruchom stronę przez lokalny serwer HTTP, np. `python -m http.server 8000`; nie otwieraj jej przez `file://`.
+2. Dodaj przykładowy opis i wybierz **Tłumacz CV na angielski**. Sprawdź nagłówki, przetłumaczone pola, wydruk/PDF i przycisk **Pokaż oryginał**.
+3. Sprawdź konsolę przeglądarki oraz status podglądu w razie błędu CORS, brakującego klucza lub przekroczenia limitu DeepL.
+4. Przed udostępnieniem strony uzupełnij i zweryfikuj informacje w [`rodo.html`](./rodo.html), w szczególności administratora, podstawę prawną, umowy z dostawcami i ewentualne transfery danych.
+
+DeepL API Free ma miesięczny limit znaków określony w aktualnym planie DeepL. Aplikacja wysyła tylko tekst, który użytkownik wybierze do przetłumaczenia; kliknięcie tłumaczenia przekazuje te treści do Cloudflare i DeepL. Nie używaj tej funkcji dla danych, których nie chcesz wysyłać do zewnętrznych usług.
 
 ---
 
