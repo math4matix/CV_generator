@@ -11,6 +11,7 @@
     <meta name="apple-mobile-web-app-title" content="CVGen">
     <link rel="manifest" href="/favicon/site.webmanifest">
     <meta name="theme-color" content="#ffffff">
+    <meta name="translation-endpoint" content="tight-flower-1930.kashliak-vlad.workers.dev">
     <style>
         * {
             box-sizing: border-box;
@@ -488,6 +489,11 @@
                         <button id="save-cv" type="button" disabled>Zapisz CV</button>
                     </div>
                 </div>
+                <div class="document-actions" aria-label="Tłumaczenie CV">
+                    <button id="translate-cv" type="button" disabled>Tłumacz CV na angielski</button>
+                    <button id="show-original-cv" type="button" hidden>Pokaż oryginał</button>
+                </div>
+                <p>Do tłumaczenia wysyłany jest wyłącznie tekst wybranych pól. Zdjęcie i dane kontaktowe nie są wysyłane.</p>
                 <div class="preview-placeholder" id="preview-placeholder">
                     Wybierz szablon powyżej, aby wyświetlić podgląd CV.
                 </div>
@@ -511,7 +517,8 @@
             <div class="consent-row">
                 <input class="consent-checkbox" id="rodo-consent" type="checkbox">
                 <label for="rodo-consent">
-                    Wyrażam zgodę na przetwarzanie moich danych osobowych w celu przygotowania CV.
+                    Zgadzam się na przetwarzanie danych w celu przygotowania CV. Rozumiem, że po wybraniu tłumaczenia
+                    tekst wskazanych pól zostanie wysłany do usługi DeepL za pośrednictwem Cloudflare.
                 </label>
             </div>
             <p class="consent-error" id="consent-error" role="alert" aria-live="polite"></p>
