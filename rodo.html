@@ -73,8 +73,13 @@
 
 	<main>
 		<section>
+			<h2>Informacje o projekcie</h2>
+			<p>Generator CV jest projektem tworzonym przez uczniów klasy 3PT Technikum Łączności w Poznaniu w ramach przedmiotu zawodowego. Projekt będzie wykorzystywany do użytku prywatnego.</p>
+		</section>
+
+		<section>
 			<h2>Administrator danych</h2>
-			<p>Administratorem danych osobowych jest <strong>[pełna nazwa administratora lub imię i nazwisko]</strong>, z siedzibą pod adresem <strong>[adres]</strong>. Kontakt w sprawach dotyczących danych osobowych: <strong>[adres e-mail]</strong>.</p>
+			<p>Administratorami danych osobowych w ramach projektu są Vladislav Kashliak i Wojciech Stachowiak, uczniowie klasy 3PT Technikum Łączności w Poznaniu. Nie podano publicznego adresu pocztowego administratorów. Kontakt w sprawach dotyczących danych osobowych: <a href="mailto:kashliak.vlad@gmail.com">kashliak.vlad@gmail.com</a>.</p>
 		</section>
 
 		<section>
@@ -82,13 +87,13 @@
 			<p>Dane wpisywane do formularza, zdjęcia i załączniki są domyślnie obsługiwane w przeglądarce użytkownika. Aplikacja nie zapisuje ich w swojej bazie danych. Zapis CV do pliku JSON odbywa się na urządzeniu użytkownika.</p>
 			<p>Opcjonalne tłumaczenie CV na język angielski uruchamia się dopiero po wybraniu przycisku „Tłumacz CV na angielski”. Wówczas do usługi DeepL API Free, za pośrednictwem skonfigurowanej usługi Cloudflare Worker, wysyłany jest tekst wybranych pól: umiejętności, zainteresowania, kierunki kształcenia, nazwy stanowisk, opisy doświadczenia, nazwy języków oraz certyfikatów. Imię i nazwisko, dane kontaktowe, adres, zdjęcie, nazwy szkół i pracodawców oraz załączone pliki nie są wysyłane do tłumaczenia. Przetłumaczony tekst jest wyświetlany w podglądzie; nie zastępuje danych wpisanych w formularzu.</p>
 			<p>Cloudflare Worker przekazuje treść do DeepL wyłącznie w celu uzyskania tłumaczenia. Kod aplikacji nie zapisuje treści CV w Workerze. Cloudflare i DeepL mogą przetwarzać dane techniczne żądań zgodnie ze swoimi warunkami i politykami. Przed publikacją należy sprawdzić aktualne warunki usług, umowy powierzenia przetwarzania danych i zasady transferów międzynarodowych: <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener">polityka prywatności Cloudflare</a> oraz <a href="https://www.deepl.com/en/privacy" target="_blank" rel="noopener">polityka prywatności DeepL</a>.</p>
-			<p>Dostawca hostingu może przetwarzać dane techniczne niezbędne do dostarczania i zabezpieczenia strony, takie jak adres IP, data i czas żądania oraz informacje o przeglądarce. Szczegóły zależą od używanego dostawcy hostingu: <strong>[nazwa dostawcy i link do jego polityki prywatności]</strong>.</p>
+			<p>Strona jest hostowana w GitHub Pages. GitHub może przetwarzać dane techniczne niezbędne do dostarczania i zabezpieczenia strony, takie jak adres IP, data i czas żądania oraz informacje o przeglądarce. Informacje o przetwarzaniu danych przez GitHub znajdują się w <a href="https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement" target="_blank" rel="noopener">polityce prywatności GitHub</a>.</p>
 		</section>
 
 		<section>
 			<h2>Cele i podstawy prawne</h2>
 			<p>Dane CV są przetwarzane lokalnie w celu przygotowania i podglądu dokumentu. Jeśli użytkownik zdecyduje się skorzystać z tłumaczenia, wybrane pola są przekazywane do Cloudflare i DeepL w celu wykonania tłumaczenia. Dane techniczne mogą być przetwarzane w celu zapewnienia bezpieczeństwa i prawidłowego działania strony.</p>
-			<p><strong>[Administrator powinien przed publikacją wskazać i zweryfikować właściwą podstawę prawną przetwarzania, w tym przekazania tekstu do usługodawców, oraz uzupełnić informacje o zgodzie i jej wycofaniu.]</strong> Zgoda na komunikat przed wejściem do aplikacji jest zapamiętywana w pamięci lokalnej przeglądarki.</p>
+			<p>Podstawa prawna przetwarzania danych wpisanych do formularza oraz przekazywania wybranych tekstów do usług tłumaczenia nie została jeszcze ustalona. Przed przetwarzaniem danych innych osób administratorzy powinni ją ustalić i uzupełnić tę informację. Potwierdzenie komunikatu przed wejściem do aplikacji jest zapamiętywane w pamięci lokalnej przeglądarki; samo w sobie nie rozstrzyga o podstawie prawnej przetwarzania.</p>
 		</section>
 
 		<section>
@@ -98,19 +103,19 @@
 
 		<section>
 			<h2>Odbiorcy i przekazywanie danych</h2>
-			<p>W przypadku użycia tłumaczenia odbiorcami wybranych pól tekstowych są Cloudflare (operator Worker) i DeepL SE (dostawca tłumaczenia). Dostawcy mogą również przetwarzać dane techniczne żądań. Administrator powinien uzupełnić informacje o rolach stron, umowach powierzenia, lokalizacji przetwarzania oraz ewentualnych transferach poza Europejski Obszar Gospodarczy zgodnie z faktyczną konfiguracją i dokumentacją dostawców: <strong>[uzupełnij przed publikacją]</strong>.</p>
+			<p>W przypadku użycia tłumaczenia odbiorcami wybranych pól tekstowych są Cloudflare (operator Worker) i DeepL SE (dostawca tłumaczenia). Dostawcy mogą również przetwarzać dane techniczne żądań. Role stron, zawarte umowy, lokalizacja przetwarzania oraz ewentualne transfery poza Europejski Obszar Gospodarczy nie zostały ustalone. Do czasu ich zweryfikowania nie używaj funkcji tłumaczenia do tekstów zawierających dane osobowe.</p>
 		</section>
 
 		<section>
 			<h2>Twoje prawa</h2>
 			<p>W zakresie, w jakim administrator przetwarza Twoje dane, przysługuje Ci prawo dostępu do danych, ich sprostowania, usunięcia lub ograniczenia przetwarzania, a w przypadkach określonych w RODO także prawo do przenoszenia danych. Możesz również wnieść skargę do Prezesa Urzędu Ochrony Danych Osobowych. Jeżeli podstawą przetwarzania jest prawnie uzasadniony interes, możesz wnieść sprzeciw z przyczyn związanych z Twoją szczególną sytuacją.</p>
-			<p>Wnioski dotyczące danych możesz kierować na adres <strong>[adres e-mail administratora]</strong>.</p>
+			<p>Wnioski dotyczące danych możesz kierować na adres <a href="mailto:kashliak.vlad@gmail.com">kashliak.vlad@gmail.com</a>.</p>
 		</section>
 
 		<section>
 			<h2>Informacje dodatkowe</h2>
 			<p>Dane z formularza nie są wykorzystywane do profilowania ani do podejmowania zautomatyzowanych decyzji. Przed rozpoczęciem korzystania z Generatora CV możesz zapoznać się z <a href="index.html">formularzem</a>.</p>
-			<p class="notice"><strong>Przed publikacją:</strong> uzupełnij pola w nawiasach kwadratowych, wskaż rzeczywisty adres strony i dostawców, sprawdź konfigurację Worker/DeepL oraz skonsultuj podstawę prawną i obowiązki informacyjne. Tłumaczenie jest opcjonalne; nie wybieraj go, jeśli nie chcesz wysyłać wskazanego tekstu do zewnętrznych usług.</p>
+			<p class="notice"><strong>Ważne:</strong> przed przetwarzaniem danych innych osób administratorzy powinni ustalić podstawę prawną oraz zweryfikować role dostawców, umowy, lokalizację przetwarzania i ewentualne transfery poza Europejski Obszar Gospodarczy. Tłumaczenie jest opcjonalne i wysyła wskazane teksty do zewnętrznych usług; nie używaj go do danych osobowych, dopóki te kwestie nie zostaną wyjaśnione.</p>
 		</section>
 	</main>
 </body>
