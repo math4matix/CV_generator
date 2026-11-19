@@ -195,6 +195,24 @@
             font-size: 0.9rem;
         }
 
+        .translation-fields {
+            margin-top: 10px;
+            padding: 12px;
+            border: 1px solid #deded7;
+            background: #fafaf8;
+            font-size: 0.9rem;
+        }
+
+        .translation-fields p {
+            margin: 0;
+        }
+
+        .translation-fields ul {
+            margin: 6px 0 10px;
+            columns: 2;
+            column-gap: 24px;
+        }
+
         .fields {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -392,6 +410,27 @@
 
     <main class="editor-layout" inert>
         <div class="form-column">
+            <section class="template-section" aria-labelledby="template-heading">
+                <h2 id="template-heading">Wybierz szablon</h2>
+                <div class="template-options" aria-label="Szablony CV">
+                    <button class="template-button" type="button" data-template="templates/black_white.html"
+                        aria-pressed="false">
+                        <strong>Zdjęcie i układ dwukolumnowy</strong>
+                        <span>Wyrazisty, czarno-biały projekt ze zdjęciem.</span>
+                    </button>
+                    <button class="template-button" type="button" data-template="templates/no_photo.html"
+                        aria-pressed="false">
+                        <strong>Klasyczny bez zdjęcia</strong>
+                        <span>Przejrzysty układ z naciskiem na doświadczenie.</span>
+                    </button>
+                    <button class="template-button" type="button" data-template="templates/simple_photo.html"
+                        aria-pressed="false">
+                        <strong>Nowoczesny ze zdjęciem</strong>
+                        <span>Prosty projekt ze zdjęciem i sekcjami CV.</span>
+                    </button>
+                </div>
+            </section>
+
             <form id="cv-form">
         <section id="personal">
             <h2>Dane osobowe</h2>
@@ -445,28 +484,7 @@
         </form>
         </div>
 
-        <aside class="preview-column" aria-label="Szablony i podgląd CV">
-            <section class="template-section" aria-labelledby="template-heading">
-                <h2 id="template-heading">Wybierz szablon</h2>
-                <div class="template-options" aria-label="Szablony CV">
-                    <button class="template-button" type="button" data-template="templates/black_white.html"
-                        aria-pressed="false">
-                        <strong>Zdjęcie i układ dwukolumnowy</strong>
-                        <span>Wyrazisty, czarno-biały projekt ze zdjęciem.</span>
-                    </button>
-                    <button class="template-button" type="button" data-template="templates/no_photo.html"
-                        aria-pressed="false">
-                        <strong>Klasyczny bez zdjęcia</strong>
-                        <span>Przejrzysty układ z naciskiem na doświadczenie.</span>
-                    </button>
-                    <button class="template-button" type="button" data-template="templates/simple_photo.html"
-                        aria-pressed="false">
-                        <strong>Nowoczesny ze zdjęciem</strong>
-                        <span>Prosty projekt ze zdjęciem i sekcjami CV.</span>
-                    </button>
-                </div>
-            </section>
-
+        <aside class="preview-column" aria-label="Podgląd CV">
             <section class="preview-section" aria-labelledby="preview-title">
                 <div class="preview-heading">
                     <div>
@@ -483,9 +501,21 @@
                     <button id="translate-cv" type="button" disabled>Tłumacz CV na angielski</button>
                     <button id="show-original-cv" type="button" hidden>Pokaż oryginał</button>
                 </div>
-                <p>Do tłumaczenia wysyłany jest wyłącznie tekst wybranych pól. Zdjęcie i dane kontaktowe nie są wysyłane.</p>
+                <div class="translation-fields" aria-label="Pola przekazywane do tłumaczenia">
+                    <p><strong>Do tłumaczenia wysyłane są tylko pola:</strong></p>
+                    <ul>
+                        <li>Umiejętności</li>
+                        <li>Zainteresowania</li>
+                        <li>Kierunek kształcenia</li>
+                        <li>Stanowisko</li>
+                        <li>Opis pracy i osiągnięć</li>
+                        <li>Język</li>
+                        <li>Nazwa certyfikatu lub szkolenia</li>
+                    </ul>
+                    <p>Zdjęcie, dane osobowe i kontaktowe, nazwy szkół i firm, daty, linki oraz załączniki nie są wysyłane.</p>
+                </div>
                 <div class="preview-placeholder" id="preview-placeholder">
-                    Wybierz szablon powyżej, aby wyświetlić podgląd CV.
+                    Wybierz szablon po lewej, aby wyświetlić podgląd CV.
                 </div>
                 <input id="load-cv-file" type="file" accept=".json,application/json" hidden>
                 <iframe class="preview-frame" id="cv-preview" title="Podgląd wybranego szablonu CV"
