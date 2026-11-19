@@ -1,141 +1,129 @@
-# Generator CV i Dokumentów PDF
+# Generator CV i dokumentów PDF
 
-Aplikacja internetowa umożliwiająca dynamiczne generowanie, zarządzanie oraz personalizację profesjonalnego CV w formacie PDF za pomocą listy opcji i dedykowanych formularzy.
+Statyczna aplikacja webowa do tworzenia CV i przygotowywania go do wydruku lub zapisania jako PDF. Formularz działa w przeglądarce, podgląd aktualizuje się na bieżąco, a gotowy dokument można wydrukować lub zapisać wybraną przez system drukowania przeglądarki opcją **Zapisz jako PDF**.
 
----
+Aplikacja jest publikowana jako strona statyczna i nie potrzebuje serwera aplikacyjnego ani bazy danych.
 
-##  Główne Funkcje
+## Funkcje
 
-* **Dynamiczna generacja PDF:** Tworzenie i dostosowywanie dokumentów PDF przy użyciu list wybieranych (drop-down).
-* **Obsługa języka angielskiego:** Możliwość automatycznego lub ręcznego tłumaczenia sekcji CV na język angielski.
-* **Klauzula RODO:** Opcja łatwego dołączenia aktualnej zgody na przetwarzanie danych osobowych w stopce dokumentu.
-* **Pełny profil kandydata:** Wprowadzanie i prezentacja danych osobowych, zdjęcia, danych kontaktowych, sekcji certyfikatów oraz odnośników do portfeli/profesjonalnych mediów społecznościowych (LinkedIn, GitHub, Portfolio).
-* **Aktualizacja danych:** Wygodne zarządzanie i rozbudowa bazy CV o nowe wpisy (doświadczenie, certyfikaty itp.).
+- Edycja danych osobowych, wykształcenia, doświadczenia, umiejętności, języków, certyfikatów i zainteresowań.
+- Dodawanie i usuwanie wielokrotnych wpisów, np. kilku miejsc pracy lub placówek edukacyjnych.
+- Dodawanie zdjęcia kandydata oraz załączników lub linków do certyfikatów.
+- Wybór jednego z trzech szablonów:
+  - dwukolumnowy czarno-biały ze zdjęciem,
+  - klasyczny bez zdjęcia,
+  - nowoczesny ze zdjęciem.
+- Aktualizacja podglądu po każdej zmianie formularza.
+- Dopasowanie zawartości podglądu do jednego arkusza A4.
+- Drukowanie CV bezpośrednio z przeglądarki.
+- Zapis i ponowne wczytanie danych do/ze zwykłego pliku JSON, wraz ze zdjęciem i załącznikami.
+- Opcjonalne tłumaczenie wybranych pól na angielski za pomocą DeepL API Free i Cloudflare Worker.
+- Powiadomienie o zgodzie RODO przy pierwszym wejściu, zapamiętywane lokalnie w przeglądarce.
 
-### Funkcje dostępne w prototypie
+## Jak działa zapis danych
 
-* Edytor CV na stronie głównej z formularzem po lewej i wyborem szablonów oraz podglądem po prawej.
-* Tłumaczenie wybranych pól CV na angielski przez DeepL API Free; nagłówki sekcji są tłumaczone lokalnie. Oryginalny formularz pozostaje bez zmian.
-* Wybór jednego z trzech przykładowych szablonów CV; podgląd pierwszego szablonu ładuje się automatycznie.
-* Drukowanie wybranego szablonu lub zapis do PDF z poziomu okna drukowania przeglądarki.
-* Zapis formularza CV do pliku JSON, w tym zdjęcia i załączników certyfikatów.
-* Otwieranie zapisanego pliku CV i automatyczne uzupełnianie formularza, także sekcji dodawanych dynamicznie.
-* Podgląd aktualizuje się w czasie rzeczywistym na podstawie danych z formularza, w tym sekcji dodawanych dynamicznie i zdjęcia.
-* Zawartość CV skaluje się tak, aby mieściła się na jednej stronie A4, również podczas drukowania lub zapisu do PDF.
+Dane formularza są przetwarzane lokalnie w przeglądarce. Aplikacja nie ma własnej bazy danych i nie wysyła formularza do serwera.
 
-## Konfiguracja tłumaczenia DeepL na GitHub Pages
+Przycisk **Zapisz CV** zapisuje dane i pliki w pliku `moje-cv.json`. Przy pierwszym otwarciu tego pliku przez **Otwórz CV** formularz zostaje uzupełniony zapisanymi wartościami i szablonem.
 
-GitHub Pages udostępnia wyłącznie pliki statyczne, dlatego klucz DeepL nie może być umieszczony w `app.js`, HTML ani w repozytorium. Aplikacja używa Cloudflare Worker jako pośrednika; Worker wysyła wyłącznie wskazane teksty do DeepL, a zdjęcie i dane kontaktowe nie są tłumaczone ani wysyłane.
+Po odświeżeniu strony dane formularza nie są automatycznie przywracane. Aby ich nie utracić, należy wcześniej zapisać CV do pliku JSON.
 
-### 1. Uzyskaj klucz DeepL API Free
+## Tłumaczenie na angielski
 
-1. Utwórz konto DeepL API Free i skopiuj klucz uwierzytelniający API z ustawień konta.
-2. Nie umieszczaj klucza w plikach projektu, GitHub Pages, issue ani publicznym repozytorium. Klucz Free korzysta z endpointu `https://api-free.deepl.com`.
+Tłumaczenie działa opcjonalnie i jest przekazywane przez serwer Cloudflare Worker, który ukrywa klucz DeepL przed kodem przeglądarki.
 
-### 2. Utwórz Cloudflare Worker
+Do tłumaczenia przekazywane są:
 
-1. Zaloguj się do Cloudflare, otwórz **Workers & Pages** i utwórz Worker na planie Free (sprawdź aktualne limity planu).
-2. W edytorze kodu Worker zastąp przykładową zawartość treścią pliku [`cloudflare/worker.js`](./cloudflare/worker.js), a następnie opublikuj Worker.
-3. W ustawieniach Worker dodaj sekret `DEEPL_API_KEY` z kluczem DeepL oraz zmienną tekstową `ALLOWED_ORIGINS`. Wartość dla tego repozytorium to `https://math4matix.github.io`; podczas lokalnego testowania możesz dodać przecinkiem `http://localhost:8000`. Jeżeli używasz własnej domeny, dodaj jej origin (protokół i domena, bez ścieżki).
-   Originy GitHub Codespaces są obsługiwane przez przykładowego Workera automatycznie dla adresów `https://*.app.github.dev`.
-4. Zapisz zmienne i ponownie opublikuj Worker. Skopiuj jego publiczny adres URL.
-5. Jeśli panel Cloudflare udostępnia reguły limitowania żądań Workerów na Twoim planie, skonfiguruj limit dla endpointu. Lista dozwolonych originów CORS ogranicza wywołania z przeglądarek, ale sama w sobie nie blokuje bezpośrednich żądań spoza przeglądarki. Monitoruj zużycie limitu DeepL.
+- umiejętności,
+- zainteresowania,
+- kierunek kształcenia,
+- stanowisko,
+- opis pracy i osiągnięć,
+- nazwa języka,
+- nazwa certyfikatu lub szkolenia.
 
-### 3. Podłącz Worker do strony
+Nie są wysyłane: zdjęcie, dane osobowe i kontaktowe, nazwy szkół i firm, daty, linki oraz załączniki. Przetłumaczony podgląd nie zmienia danych wpisanych w formularzu.
 
-W [`index.html`](./index.html) wstaw skopiowany URL Worker jako wartość `content` w metadanej:
+### Konfiguracja Cloudflare Worker
 
-```html
-<meta name="translation-endpoint" content="https://TWOJ-WORKER.TWOJE-KONTO.workers.dev">
+1. Utwórz Cloudflare Worker, korzystając z panelu Cloudflare lub narzędzia Wrangler.
+2. Wdróż zawartość [`cloudflare/worker.js`](./cloudflare/worker.js).
+3. Dodaj w ustawieniach Worker sekret:
+
+   ```text
+   DEEPL_API_KEY=<klucz DeepL API Free>
+   ```
+
+4. Dodaj zmienną tekstową z dozwolonymi adresami stron:
+
+   ```text
+   ALLOWED_ORIGINS=https://math4matix.github.io,http://localhost:8000
+   ```
+
+   Każdy origin powinien zawierać wyłącznie protokół i domenę, bez ścieżki.
+
+5. W [`index.html`](./index.html) ustaw w metadanych adres wdrożonego Workera:
+
+   ```html
+   <meta name="translation-endpoint"
+         content="https://TWOJ-WORKER.TWOJE-KONTO.workers.dev">
+   ```
+
+Worker sprawdza metodę żądania, format JSON, limit 50 tekstów i limit 12 000 znaków na żądanie. Odpowiada z kontrolą CORS dla zdefiniowanych originów oraz, automatycznie, dla adresów GitHub Codespaces.
+
+Klucz DeepL nie powinien być umieszczany w `index.html`, `app.js`, repozytorium ani w plikach publikowanych przez GitHub Pages.
+
+## Uruchomienie lokalne
+
+Projekt składa się z plików statycznych HTML, CSS i JavaScript. Można go uruchomić dowolnym serwerem HTTP, np:
+
+```bash
+python -m http.server 8000
 ```
 
-Zapisz i wypchnij zmiany do gałęzi publikowanej przez GitHub Pages. W repozytorium sprawdź **Settings → Pages**, aby potwierdzić adres strony. Origin strony (bez ścieżki `/CV_generator`) musi dokładnie odpowiadać jednej z wartości `ALLOWED_ORIGINS`.
+Następnie otwórz:
 
-### 4. Sprawdź działanie
+```text
+http://localhost:8000
+```
 
-1. Uruchom stronę przez lokalny serwer HTTP, np. `python -m http.server 8000`; nie otwieraj jej przez `file://`.
-2. Dodaj przykładowy opis i wybierz **Tłumacz CV na angielski**. Sprawdź nagłówki, przetłumaczone pola, wydruk/PDF i przycisk **Pokaż oryginał**.
-3. Sprawdź konsolę przeglądarki oraz status podglądu w razie błędu CORS, brakującego klucza lub przekroczenia limitu DeepL.
-4. Przed udostępnieniem strony uzupełnij i zweryfikuj informacje w [`rodo.html`](./rodo.html), w szczególności administratora, podstawę prawną, umowy z dostawcami i ewentualne transfery danych.
+Nie otwieraj projektu przez adres `file://`, ponieważ przeglądarka ładuje szablony i skrypty jako zasoby sieciowe. Do testowania tłumaczenia uruchom stronę również przez `localhost`, a adres lokalnego serwera dodaj do `ALLOWED_ORIGINS`.
 
-DeepL API Free ma miesięczny limit znaków określony w aktualnym planie DeepL. Aplikacja wysyła tylko tekst, który użytkownik wybierze do przetłumaczenia; kliknięcie tłumaczenia przekazuje te treści do Cloudflare i DeepL. Nie używaj tej funkcji dla danych, których nie chcesz wysyłać do zewnętrznych usług.
+## Publikacja przez GitHub Pages
 
----
+Repozytorium można publikować bez dodatkowego procesu budowania. W ustawieniach GitHub Pages należy wskazać gałąź i katalog główny repozytorium.
 
-##  Stack Techniczny
-
-* **Frontend:** Vanilla JavaScript (Plain JS), HTML5
-* **Style:** CSS (Bootstrap 5)
-* **Generowanie i obsługa PDF:** `pdf-lib`, `pdf.js`
-* **Baza danych:** SQLite
-* **Hosting:** Darmowy hosting frontendowy (np. Netlify / Vercel)
-
----
-
-##  Struktura Danych CV
-
-Aplikacja zbiera i przetwarza dane podzielone na następujące sekcje:
-
-### 1. Dane Osobowe i Kontaktowe
-* Imię i Nazwisko
-* Zdjęcie osobiste
-* Adres e-mail
-* Numer telefonu
-* Adres zamieszkania
-* Odnośniki do Mediów Społecznościowych (LinkedIn, GitHub) oraz Link do Portfolio
-
-### 2. Edukacja
-Lista placówek oświatowych zawierająca:
-* Nazwę uczelni / szkoły
-* Adres
-* Kierunek / Specjalność
-* Zakres dat (od – do)
-
-### 3. Doświadczenie Zawodowe
-Opis doświadczenia oparty na metodzie problemowo-zadaniowej (**Problem → Rozwiązanie → Skutek**):
-* Poprzednie stanowiska pracy / praktyki / staże
-* Szczęśliwy opis osiągnięć i rozwiązywanych problemów
-* Daty (od – do) / okres trwania
-
-### 4. Umiejętności
-* Lista umiejętności twardych i miękkich.
-
-### 5. Języki Obce
-* Język
-* Poziom zaawansowania (np. B2, C1)
-* Dedykowany certyfikat językowy (jeśli dotyczy)
-
-### 6. Certyfikaty i Szkolenia
-* Nazwa certyfikatu
-* Link / zdjęcie / dokument potwierdzający
-
-### 7. Zainteresowania
-* Lista pasji i zainteresowań wzbogacających profil kandydata.
-
----
-
-##  Instalacja i Uruchomienie
-
-1. **Klonowanie repozytorium:**
-   ```bash
-   git clone https://github.com/wlasiciel/nazwa-repozytorium.git
-   cd nazwa-repozytorium
-   ```
-
-2. **Uruchomienie lokalne:**
-   Ze względu na wykorzystanie czystego JavaScriptu oraz bibliotek klienckich (`pdf-lib`, `pdf.js`), aplikację można uruchomić za pomocą dowolnego serwera statycznego (np. rozszerzenia *Live Server* w VS Code) lub serwując pliki statyczne przez Node.js / Python:
-
-   ```bash
-   # Przykład uruchomienia prostego serwera Python
-   python -m http.server 8000
-   ```
-
-3. Otwórz `http://localhost:8000` w przeglądarce.
+Własny adres Worker powinien być skonfigurowany zgodnie z publicznym originem strony, np. `https://math4matix.github.io`. Origin nie powinien zawierać nazwy repozytorium ani ścieżki strony.
 
 ## Struktura projektu
 
-* `index.html` — główny edytor CV, formularz danych oraz wybór i podgląd szablonów.
-* `template_viewer.html` — samodzielny podgląd przykładowych szablonów.
-* `app.js` — obsługa wyboru szablonu, podglądu, drukowania i zapisu na stronie głównej oraz w samodzielnym podglądzie.
-* `templates/` — trzy gotowe szablony CV.
-* `assets/` — przykładowe zdjęcia używane przez szablony.
+- `index.html` — główny edytor, formularz, lista szablonów i komunikat RODO.
+- `app.js` — logika formularza, podglądów, dynamicznych sekcji, zapisu i wczytywania JSON oraz tłumaczenia.
+- `templates/black_white.html` — szablon dwukolumnowy ze zdjęciem.
+- `templates/no_photo.html` — szablon klasyczny bez zdjęcia.
+- `templates/simple_photo.html` — szablon nowoczesny ze zdjęciem.
+- `template_viewer.html` — statyczny podgląd dostępnych szablonów.
+- `rodo.html` — klauzula informacyjna RODO i informacje o przetwarzaniu danych.
+- `cloudflare/worker.js` — pośrednik dla API tłumaczenia DeepL.
+- `wrangler.toml` — obecnie pusty plik przygotowany do przyszłej lokalnej konfiguracji Workers.
+- `assets/` — przykładowe zdjęcia używane przez szablony.
+- `favicon/` — ikony i manifest strony.
+
+## Stack techniczny
+
+- HTML5 i CSS.
+- Vanilla JavaScript bez frameworka.
+- `iframe` do podglądu szablonów i funkcji drukowania przeglądarki.
+- Cloudflare Workers do pośrednictwa w tłumaczeniu.
+- DeepL API Free jako opcjonalna usługa tłumaczenia.
+- GitHub Pages jako hosting statyczny.
+
+Aplikacja nie używa obecnie `pdf-lib`, `pdf.js`, Bootstrap, SQLite ani serwera REST. PDF powstaje w standardowym oknie drukowania przeglądarki.
+
+## Prywatność i dane osobowe
+
+- Dane formularza i pliki pozostają w przeglądarce, dopóki użytkownik nie zapisze CV do pliku.
+- Zgoda RODO jest zapisywana w `localStorage` przeglądarki.
+- Tłumaczenie wysyła wybrane pola tekstowe do Cloudflare Worker, a następnie do DeepL.
+- Cloudflare i DeepL mogą przetwarzać dane techniczne żądań zgodnie ze swoimi aktualnymi regulaminami i politykami.
+- Szczegółowe informacje znajdują się w [`rodo.html`](./rodo.html).
