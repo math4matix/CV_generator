@@ -1,32 +1,23 @@
-# Generator CV i dokumentów PDF
+# Generator CV
 
-Statyczna aplikacja webowa do tworzenia CV i przygotowywania go do wydruku lub zapisania jako PDF. Formularz działa w przeglądarce, podgląd aktualizuje się na bieżąco, a gotowy dokument można wydrukować lub zapisać wybraną przez system drukowania przeglądarki opcją **Zapisz jako PDF**.
+[Działająca wersja](https://math4matix.github.io/CV_generator/)
 
-Aplikacja jest publikowana jako strona statyczna i nie potrzebuje serwera aplikacyjnego ani bazy danych.
+Projekt szkolny — generator CV z podglądem na żywo, zapisem do pliku JSON, wydrukiem do PDF i tłumaczeniem na angielski.
 
 ## Funkcje
 
-- Edycja danych osobowych, wykształcenia, doświadczenia, umiejętności, języków, certyfikatów i zainteresowań.
-- Dodawanie i usuwanie wielokrotnych wpisów, np. kilku miejsc pracy lub placówek edukacyjnych.
-- Dodawanie zdjęcia kandydata oraz załączników lub linków do certyfikatów.
-- Wybór jednego z trzech szablonów:
-  - dwukolumnowy czarno-biały ze zdjęciem,
-  - klasyczny bez zdjęcia,
-  - nowoczesny ze zdjęciem.
-- Aktualizacja podglądu po każdej zmianie formularza.
-- Dopasowanie zawartości podglądu do jednego arkusza A4.
-- Drukowanie CV bezpośrednio z przeglądarki.
-- Zapis i ponowne wczytanie danych do/ze zwykłego pliku JSON, wraz ze zdjęciem i załącznikami.
-- Opcjonalne tłumaczenie wybranych pól na angielski za pomocą DeepL API Free i Cloudflare Worker.
-- Powiadomienie o zgodzie RODO przy pierwszym wejściu, zapamiętywane lokalnie w przeglądarce.
+- Edycja danych osobowych i kontaktowych, wykształcenia, doświadczenia zawodowego, umiejętności, języków, certyfikatów i zainteresowań.
+- Dodawanie i usuwanie wpisów dotyczących edukacji, doświadczenia, języków oraz certyfikatów.
+- Dodawanie zdjęcia oraz linku lub pliku do certyfikatu.
+- Wybór jednego z trzech szablonów CV.
+- Podgląd aktualizowany podczas edycji formularza.
+- Zapis i ponowne wczytanie danych CV z pliku JSON.
+- Drukowanie CV z poziomu przeglądarki; w oknie drukowania można wybrać opcję **Zapisz jako PDF**.
+- Opcjonalne tłumaczenie wybranych pól na angielski przez DeepL API Free za pośrednictwem Cloudflare Worker.
 
 ## Jak działa zapis danych
 
-Dane formularza są przetwarzane lokalnie w przeglądarce. Aplikacja nie ma własnej bazy danych i nie wysyła formularza do serwera.
-
-Przycisk **Zapisz CV** zapisuje dane i pliki w pliku `moje-cv.json`. Przy pierwszym otwarciu tego pliku przez **Otwórz CV** formularz zostaje uzupełniony zapisanymi wartościami i szablonem.
-
-Po odświeżeniu strony dane formularza nie są automatycznie przywracane. Aby ich nie utracić, należy wcześniej zapisać CV do pliku JSON.
+Dane formularza są przetwarzane w przeglądarce. CV można pobrać jako plik `moje-cv.json` i później wczytać go przyciskiem **Otwórz CV**. Plik obejmuje także zdjęcie oraz pliki certyfikatów. Formularz nie jest automatycznie przywracany po odświeżeniu strony.
 
 ## Tłumaczenie na angielski
 
@@ -73,15 +64,17 @@ Worker sprawdza metodę żądania, format JSON, limit 50 tekstów i limit 12 000
 
 Klucz DeepL nie powinien być umieszczany w `index.html`, `app.js`, repozytorium ani w plikach publikowanych przez GitHub Pages.
 
-## Uruchomienie lokalne
+## Instalacja i uruchomienie lokalne
 
-Projekt składa się z plików statycznych HTML, CSS i JavaScript. Można go uruchomić dowolnym serwerem HTTP, np:
+Sklonuj repozytorium, przejdź do katalogu `CV_generator` i uruchom lokalny serwer:
 
 ```bash
+git clone https://github.com/math4matix/CV_generator.git
+cd CV_generator
 python -m http.server 8000
 ```
 
-Następnie otwórz:
+Następnie otwórz w przeglądarce:
 
 ```text
 http://localhost:8000
@@ -97,33 +90,40 @@ Własny adres Worker powinien być skonfigurowany zgodnie z publicznym originem 
 
 ## Struktura projektu
 
-- `index.html` — główny edytor, formularz, lista szablonów i komunikat RODO.
-- `app.js` — logika formularza, podglądów, dynamicznych sekcji, zapisu i wczytywania JSON oraz tłumaczenia.
+- `index.html` — edytor, formularz, wybór szablonów, podgląd i komunikat zgody.
+- `app.js` — logika formularza, podglądu, dynamicznych sekcji, zapisu i wczytywania JSON oraz tłumaczenia.
 - `templates/black_white.html` — szablon dwukolumnowy ze zdjęciem.
 - `templates/no_photo.html` — szablon klasyczny bez zdjęcia.
-- `templates/simple_photo.html` — szablon nowoczesny ze zdjęciem.
-- `template_viewer.html` — statyczny podgląd dostępnych szablonów.
-- `rodo.html` — klauzula informacyjna RODO i informacje o przetwarzaniu danych.
+- `templates/simple_photo.html` — szablon ze zdjęciem i sekcjami CV.
+- `template_viewer.html` — podgląd dostępnych szablonów.
+- `rodo.html` — informacje o przetwarzaniu danych.
 - `cloudflare/worker.js` — pośrednik dla API tłumaczenia DeepL.
-- `wrangler.toml` — obecnie pusty plik przygotowany do przyszłej lokalnej konfiguracji Workers.
+- `wrangler.toml` — pusty plik.
 - `assets/` — przykładowe zdjęcia używane przez szablony.
 - `favicon/` — ikony i manifest strony.
 
 ## Stack techniczny
 
-- HTML5 i CSS.
-- Vanilla JavaScript bez frameworka.
-- `iframe` do podglądu szablonów i funkcji drukowania przeglądarki.
-- Cloudflare Workers do pośrednictwa w tłumaczeniu.
-- DeepL API Free jako opcjonalna usługa tłumaczenia.
-- GitHub Pages jako hosting statyczny.
-
-Aplikacja nie używa obecnie `pdf-lib`, `pdf.js`, Bootstrap, SQLite ani serwera REST. PDF powstaje w standardowym oknie drukowania przeglądarki.
+- HTML i CSS.
+- Vanilla JavaScript.
+- Cloudflare Worker jako pośrednik żądań do DeepL API Free.
+- GitHub Pages jako hosting statycznej aplikacji.
+- `window.print()` do otwarcia okna drukowania przeglądarki i zapisania CV jako PDF.
 
 ## Prywatność i dane osobowe
 
-- Dane formularza i pliki pozostają w przeglądarce, dopóki użytkownik nie zapisze CV do pliku.
+- Dane CV nie są przesyłane, poza wybranymi polami tekstowymi wysyłanymi do tłumaczenia.
 - Zgoda RODO jest zapisywana w `localStorage` przeglądarki.
-- Tłumaczenie wysyła wybrane pola tekstowe do Cloudflare Worker, a następnie do DeepL.
-- Cloudflare i DeepL mogą przetwarzać dane techniczne żądań zgodnie ze swoimi aktualnymi regulaminami i politykami.
+- Tłumaczenie wysyła wybrane pola tekstowe przez Cloudflare Worker do DeepL.
 - Szczegółowe informacje znajdują się w [`rodo.html`](./rodo.html).
+
+## Znane ograniczenia
+
+- Projekt nie ma testów automatycznych.
+- Tłumaczenie wysyła wskazane pola tekstowe do Cloudflare Worker i DeepL.
+- Dane CV można zapisać tylko do pliku JSON; aplikacja nie przechowuje ich po odświeżeniu strony.
+
+## Autorzy
+
+- [math4matix](https://github.com/math4matix)
+- [rafSliw](https://github.com/rafSliw)
